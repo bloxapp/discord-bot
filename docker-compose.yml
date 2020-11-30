@@ -1,0 +1,27 @@
+version: '3.5'
+
+networks:
+  main:
+    external:
+      name: main
+  default:
+    name: main
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "yarn start"
+    volumes:
+      - ./:/opt/app/
+    ports:
+      - "$PORT:$PORT"
+    environment:
+      - PORT
+      - TOKEN
+      - VC_URL
+      - VC_STAGE_URL
+      - DEV_CHANNEL_ID
+
+    restart: on-failure
