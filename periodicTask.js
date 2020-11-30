@@ -1,17 +1,11 @@
-const HALF_DAY_MILLISECONDS = 1000 * 60 * 60 * 12;
-
-const setHours = () => {
-  var d = new Date();
-  return (-d + d.setHours(20,0,0,0));
-}
-
-const runPeriodicTask = (func, arg) => {
+const runPeriodicTask = (func, args, timeConfig) => {
+  const { start, interval } = timeConfig;
   setTimeout(() => {
-    func(arg);
+    func(...args);
     setInterval(() => { 
-      func(arg);
-    }, HALF_DAY_MILLISECONDS)
-  }, setHours());
+      func(...args);
+    }, interval)
+  }, start);
 };
 
 module.exports = runPeriodicTask;

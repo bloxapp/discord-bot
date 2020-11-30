@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const api = () => {
+const validatorsApi = () => {
   const loadWallets = async (isStage) => {
     const url = isStage ? `${process.env.VC_STAGE_URL}/wallets_states` : `${process.env.VC_URL}/wallets_states`;
     const wallets = await axios(url);
@@ -12,11 +12,11 @@ const api = () => {
     const validators = await axios(url);
     return validators.data.result;
   }
-  
+
   return {
     loadWallets,
     loadValidators
   };
 };
 
-module.exports = api();
+module.exports = validatorsApi();

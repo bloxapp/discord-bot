@@ -1,8 +1,7 @@
 const axios = require('axios');
 
-const api = () => {
-  const getOrganizations = async () => {
-    // TODO
+const organizationsApi = () => {
+  const getOrganizations = async () => { // TODO
     return;
   }
   return {
@@ -10,4 +9,4 @@ const api = () => {
   };
 };
 
-module.exports = api();
+module.exports = organizationsApi();
