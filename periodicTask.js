@@ -6,9 +6,9 @@ const setHours = () => {
 }
 
 const runPeriodicTask = (func, arg) => {
-  setTimeout(function() {
+  setTimeout(() => {
     func(arg);
-    setInterval(function() { 
+    setInterval(() => { 
       func(arg);
     }, HALF_DAY_MILLISECONDS)
   }, setHours());
