@@ -10,9 +10,14 @@ const loadValidatorsData = async (isStage) => {
 const createEmbedMessage = async (data, isStage) => {
   const { wallets, validators } = data;
 
+  console.log(validators);
+
   let validatorsCount = 0;
+  const validatorsKeys = ['active', 'deposited', 'unknown_status'];
   for (const [key, value] of Object.entries(validators)) {
-    validatorsCount+= value;
+    if(validatorsKeys.includes(key)) {
+      validatorsCount+= value;
+    }    
   }
 
   return {
@@ -37,7 +42,7 @@ const createEmbedMessage = async (data, isStage) => {
       },
       {
         name: 'Total validators',
-        value: validators.active.length,
+        value: validatorsCount,
       },                  
     ],
   };
