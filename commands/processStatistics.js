@@ -3,15 +3,11 @@ const validatorsApi = require('../api/validators');
 const loadValidatorsData = async (isStage) => {
   const wallets = await validatorsApi.loadWallets(isStage);
   const validators = await validatorsApi.loadValidators(isStage);
-  
   return { wallets, validators };
 };
 
 const createEmbedMessage = async (data, isStage) => {
   const { wallets, validators } = data;
-
-  console.log(validators);
-
   let validatorsCount = 0;
   const validatorsKeys = ['active', 'deposited', 'unknown_status'];
   for (const [key, value] of Object.entries(validators)) {
