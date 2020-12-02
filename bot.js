@@ -24,12 +24,12 @@ const onReady = async () => {
 
 const onMessage = async (message) => { 
   let processStatistics;
-  if (message.content === 'u.s') {
+  if (message.content === '!u.s') {
     processStatistics = await loadProcessStatistics();
     await message.reply({embed: processStatistics});
     return;
   }
-  if (message.content === 'u.s.s') {
+  if (message.content === '!u.s.s') {
     processStatistics = await loadProcessStatistics(true);
     await message.reply({embed: processStatistics});
     return;
