@@ -3,6 +3,7 @@ const validatorsApi = require('../api/validators');
 const loadValidatorsData = async (isStage) => {
   const wallets = await validatorsApi.loadWallets(isStage);
   const validators = await validatorsApi.loadValidators(isStage);
+  
   return { wallets, validators };
 };
 
@@ -36,7 +37,7 @@ const createEmbedMessage = async (data, isStage) => {
       },
       {
         name: 'Total validators',
-        value: validatorsCount,
+        value: validators.active.length,
       },                  
     ],
   };
