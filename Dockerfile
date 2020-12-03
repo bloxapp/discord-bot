@@ -18,5 +18,3 @@ RUN yarn install && mv /opt/app/node_modules /node_modules
 COPY . $APP_WORKDIR
 
 EXPOSE 5000
-
-ENTRYPOINT: ["sh", "-c", "yarn start"]
