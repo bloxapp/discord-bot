@@ -19,4 +19,4 @@ COPY . $APP_WORKDIR
 
 EXPOSE 5000
 
-ENTRYPOINT: ["/bin/sh", "-c", "yarn start"]
+ENTRYPOINT: ["sh", "-c", "yarn start"]
