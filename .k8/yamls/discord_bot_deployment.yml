@@ -97,3 +97,9 @@ spec:
             secretKeyRef:
               name: config-secrets
               key: dev_channel_id
+
+        - name: ALL_CHANNEL_ID
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: all_channel_id
