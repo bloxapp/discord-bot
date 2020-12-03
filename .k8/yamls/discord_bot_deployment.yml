@@ -75,7 +75,8 @@ spec:
         ports:
         - containerPort: 5000
           name: port5000
-        command: ["/bin/sh", "-c", "yarn start"]
+        command: ["/bin/sh"]
+        args: ["-c", "yarn start"]
         env:
         - name: VC_URL
           value: "http://vc.bloxinfra.com/api/monitor" 
