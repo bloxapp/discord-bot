@@ -17,6 +17,3 @@ RUN yarn install && mv /opt/app/node_modules /node_modules
 
 COPY . $APP_WORKDIR
 
-COPY entrypoint.sh /opt/app
-
-CMD ["sh", "/opt/app/entrypoint.sh"]

@@ -75,7 +75,6 @@ spec:
         ports:
         - containerPort: 5000
           name: port5000
-        command: ["sh", "export PORT=5000", "sleep 1", "yarn start"]
         env:
         - name: VC_URL
           value: "http://vc.bloxinfra.com/api/monitor" 
@@ -84,7 +83,7 @@ spec:
           value: "http://vc.stage.bloxinfra.com/api/monitor"
 
         - name: PORT
-          value: "5005"
+          value: "5000"
 
         - name: TOKEN
           valueFrom:
