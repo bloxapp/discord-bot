@@ -17,4 +17,6 @@ RUN yarn install && mv /opt/app/node_modules /node_modules
 
 COPY . $APP_WORKDIR
 
+RUN export PORT=5005
+
 CMD yarn start
