@@ -19,4 +19,4 @@ COPY . $APP_WORKDIR
 
 EXPOSE 5000
 
-CMD yarn start
+CMD export PORT=5000 && yarn start
