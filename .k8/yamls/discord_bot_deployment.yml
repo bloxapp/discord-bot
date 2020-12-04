@@ -73,8 +73,9 @@ spec:
         image: REPLACE_DOCKER_REPO:REPLACE_IMAGETAG 
         imagePullPolicy: Always
         ports:
-        - containerPort: 5005
-          name: port5005
+        - containerPort: 5000
+          name: port5000
+        command: ["export PORT=5000 && yarn start"]
         env:
         - name: VC_URL
           value: "http://vc.bloxinfra.com/api/monitor" 
