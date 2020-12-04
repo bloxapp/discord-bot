@@ -16,3 +16,5 @@ RUN yarn install && mv /opt/app/node_modules /node_modules
 #RUN yarn install
 
 COPY . $APP_WORKDIR
+
+CMD yarn start
