@@ -73,8 +73,8 @@ spec:
         image: REPLACE_DOCKER_REPO:REPLACE_IMAGETAG 
         imagePullPolicy: Always
         ports:
-        - containerPort: 5000
-          name: port5000
+        - containerPort: 5005
+          name: port5005
         env:
         - name: VC_URL
           value: "http://vc.bloxinfra.com/api/monitor" 
@@ -83,7 +83,7 @@ spec:
           value: "http://vc.stage.bloxinfra.com/api/monitor"
 
         - name: PORT
-          value: "5000"
+          value: "5005"
 
         - name: TOKEN
           valueFrom:
