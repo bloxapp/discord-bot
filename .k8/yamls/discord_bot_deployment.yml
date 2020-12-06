@@ -78,10 +78,10 @@ spec:
         command: ["/bin/sh", "-c", "yarn start"]
         env:
         - name: VC_URL
-          value: "http://vc.bloxinfra.com/api/monitor" 
+          value: "http://vc.bloxinfra.com/api" 
         
         - name: VC_STAGE_URL
-          value: "http://vc.stage.bloxinfra.com/api/monitor"
+          value: "http://vc.stage.bloxinfra.com/api"
 
         - name: PORT
           value: "5000"
