@@ -83,7 +83,7 @@ spec:
           value: "http://vc.stage.bloxinfra.com/api/monitor"
 
         - name: PORT
-          value: "5005"
+          value: "5000"
 
         - name: TOKEN
           valueFrom:
