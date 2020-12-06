@@ -12,7 +12,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: sh -c "yarn start"
     volumes:
       - ./:/opt/app/
     ports:

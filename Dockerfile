@@ -7,9 +7,17 @@ RUN apk update && apk upgrade && \
         nodejs \
         yarn
 
-COPY package*.json $APP_WORKDIR
-WORKDIR $APP_WORKDIR
 
-RUN yarn install
+COPY package*.json $APP_WORKDIR
+RUN yarn global add nodemon
+
+WORKDIR $APP_WORKDIR
+RUN yarn install && mv /opt/app/node_modules /node_modules
+
+COPY ./entrypoint /entrypoint
+RUN sed -i 's/\r$//g' /entrypoint
+RUN chmod +x /entrypoint
 
 COPY . $APP_WORKDIR
+
+ENTRYPOINT ["/entrypoint"]
