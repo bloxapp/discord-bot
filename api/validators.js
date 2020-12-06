@@ -16,7 +16,7 @@ const validatorsApi = () => {
   }
 
   const loadNewValidators = async (isStage, network) => {
-    const interval = `activation={"days":3}&network=${network}`;
+    const interval = `activation={"minutes":30}&network=${network}`;
     const url = isStage ? 
       `${process.env.VC_STAGE_URL}/accounts/?${interval}` :
       `${process.env.VC_URL}/accounts/?${interval}`;

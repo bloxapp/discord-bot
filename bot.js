@@ -21,7 +21,7 @@ const processStatisticsTimeConfig = {
 
 const newValidatorsTimeConfig = {
   start: setHour(),
-  interval: 1000 * 60 * 30 // half hour,
+  interval: 1000 * 60 * 29 // 29 mins,
 };
 
 const loadNewTestnetValidatorsFromStage = async () => await loadNewValidators(true, 'pyrmont');
