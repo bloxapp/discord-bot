@@ -45,6 +45,11 @@ const onMessage = async (message) => {
     return;
   }  
   if (message.content === '!new.validators') {
+    const newValidators = await loadNewValidators(false, 'pyrmont');
+    await message.reply({embed: newValidators});
+    return;
+  }  
+  if (message.content === '!new.validators.stage') {
     const isStage = true;
     const newValidators = await loadNewValidators(isStage, 'pyrmont');
     await message.reply({embed: newValidators});
