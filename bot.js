@@ -8,10 +8,12 @@ const bot = new Discord.Client();
 
 bot.login(process.env.TOKEN);
 
+const isStage = VC_STAGE_URL && !VC_URL;
+
 const emitMessage = async (func) => {
   const asyncFunc = await func();
-  bot.channels.get(process.env.DEV_CHANNEL_ID).send({ embed: asyncFunc });
-  // bot.channels.get(process.env.ALL_CHANNEL_ID).send({ embed: asyncFunc });
+  isStage && bot.channels.get(process.env.DEV_CHANNEL_ID).send({ embed: asyncFunc });
+  !isStage && bot.channels.get(process.env.ALL_CHANNEL_ID).send({ embed: asyncFunc });
 }
 
 const processStatisticsTimeConfig = {
@@ -35,23 +37,22 @@ const onReady = async () => {
 const onMessage = async (message) => { 
   let processStatistics;
   if (message.content === '!u.s') {
-    processStatistics = await loadProcessStatistics();
+    processStatistics = await loadProcessStatistics(false);
     await message.reply({embed: processStatistics});
     return;
   }
-  if (message.content === '!u.s.s') {
+  if (message.content === '!u.s.s' && isStage) {
     processStatistics = await loadProcessStatistics(true);
     await message.reply({embed: processStatistics});
     return;
   }  
-  if (message.content === '!new.validators') {
+  if (message.content === '!n.v') {
     const newValidators = await loadNewValidators(false, 'pyrmont');
     await message.reply({embed: newValidators});
     return;
   }  
-  if (message.content === '!new.validators.stage') {
-    const isStage = true;
-    const newValidators = await loadNewValidators(isStage, 'pyrmont');
+  if (message.content === '!n.v.s' && isStage) {
+    const newValidators = await loadNewValidators(true, 'pyrmont');
     await message.reply({embed: newValidators});
     return;
   }  
