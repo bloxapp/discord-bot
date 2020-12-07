@@ -8,7 +8,7 @@ const bot = new Discord.Client();
 
 bot.login(process.env.TOKEN);
 
-const isStage = VC_STAGE_URL && !VC_URL;
+const isStage = process.env.VC_STAGE_URL && !process.env.VC_STAGE_URL;
 
 const emitMessage = async (func) => {
   const asyncFunc = await func();
