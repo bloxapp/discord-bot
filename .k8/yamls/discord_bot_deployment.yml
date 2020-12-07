@@ -77,10 +77,10 @@ spec:
           name: port5000
         env:
         - name: VC_URL
-          value: "http://vc.bloxinfra.com/api" 
+          value: "" 
         
         - name: VC_STAGE_URL
-          value: "http://vc.stage.bloxinfra.com/api"
+          value: "vc-svc.validators/api"
 
         - name: PORT
           value: "5000"
