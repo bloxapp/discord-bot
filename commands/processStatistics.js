@@ -1,4 +1,5 @@
 const validatorsApi = require('../api/validators');
+const organizationsApi = require('../api/organizations');
 
 const loadValidatorsData = async (isStage) => {
   const wallets = await validatorsApi.loadWallets(isStage);
@@ -6,8 +7,13 @@ const loadValidatorsData = async (isStage) => {
   return { wallets, validators };
 };
 
+const loadUsersData = async (isStage) => {
+  const users = await organizationsApi.loadStats(isStage);
+  return users;
+};
+
 const createEmbedMessage = async (data, isStage) => {
-  const { wallets, validators } = data;
+  const { wallets, validators, users } = data;
   let validatorsCount = 0;
   const validatorsKeys = ['active', 'deposited'];
   for (const [key, value] of Object.entries(validators)) {
@@ -15,7 +21,6 @@ const createEmbedMessage = async (data, isStage) => {
       validatorsCount+= value;
     }    
   }
-
   return {
     color: 0x32E0C4, 
     url: 'https://www.bloxstaking.com',
@@ -26,7 +31,7 @@ const createEmbedMessage = async (data, isStage) => {
     fields: [
       {
         name: 'Total registered users',
-        value: 'N/A',
+        value: users.total,
       },
       {
         name: 'Total wallets',
@@ -46,7 +51,8 @@ const createEmbedMessage = async (data, isStage) => {
 
 const loadProcessStatistics = async (isStage) => {
   const validators = await loadValidatorsData(isStage);
-  const outputString = await createEmbedMessage(validators, isStage);
+  const users = await loadUsersData(isStage);
+  const outputString = await createEmbedMessage({ ...validators, users }, isStage);
   return outputString;
 };
 

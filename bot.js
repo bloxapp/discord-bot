@@ -8,12 +8,14 @@ const bot = new Discord.Client();
 
 bot.login(process.env.TOKEN);
 
-const isStage = process.env.VC_STAGE_URL && (process.env.VC_URL=='null');
+const isStage = process.env.ENV === 'stage';
 
 const emitMessage = async (func) => {
   const asyncFunc = await func();
-  isStage && bot.channels.get(process.env.DEV_CHANNEL_ID).send({ embed: asyncFunc });
-  !isStage && bot.channels.get(process.env.ALL_CHANNEL_ID).send({ embed: asyncFunc });
+  const channel = isStage
+    ? process.env.DEV_CHANNEL_ID
+    : process.env.ALL_CHANNEL_ID;
+  bot.channels.get(channel).send({ embed: asyncFunc });
 }
 
 const processStatisticsTimeConfig = {

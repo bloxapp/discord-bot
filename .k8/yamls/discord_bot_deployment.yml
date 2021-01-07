@@ -91,6 +91,18 @@ spec:
               name: config-secrets
               key: vc_stage_url
 
+        - name: ORG_URL
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: org_url
+
+        - name: ORG_STAGE_URL
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: org_stage_url
+
         - name: TOKEN
           valueFrom:
             secretKeyRef:
