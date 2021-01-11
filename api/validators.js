@@ -1,25 +1,20 @@
 const axios = require('axios');
 
 const validatorsApi = () => {
-  const loadWallets = async (isStage) => {
-    const path = 'monitor/wallets_states';
-    const url = isStage ? `${process.env.VC_STAGE_URL}/${path}` : `${process.env.VC_URL}/${path}`;
+  const loadWallets = async () => {
+    const url = `${process.env.VC_URL}/monitor/wallets_states`;
     const wallets = await axios(url);
     return wallets.data.result;
   }
   
-  const loadValidators = async (isStage) => {
-    const path = 'monitor/accounts_states';
-    const url = isStage ? `${process.env.VC_STAGE_URL}/${path}` : `${process.env.VC_URL}/${path}`;
+  const loadValidators = async () => {
+    const url = `${process.env.VC_URL}/monitor/accounts_states`;
     const validators = await axios(url);
     return validators.data.result;
   }
 
-  const loadNewValidators = async (isStage, network) => {
-    const interval = `activation={"minutes":30}&network=${network}`;
-    const url = isStage ? 
-      `${process.env.VC_STAGE_URL}/accounts/?${interval}` :
-      `${process.env.VC_URL}/accounts/?${interval}`;
+  const loadNewValidators = async (network) => {
+    const url = `${process.env.VC_URL}/accounts/?activation={"minutes":30}&network=${network}`;
     const validators = await axios(url);
     return validators.data.slice(0, 10);
   };

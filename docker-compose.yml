@@ -17,10 +17,18 @@ services:
     ports:
       - "$PORT:$PORT"
     environment:
+      - ENV
       - PORT
       - TOKEN
       - VC_URL
-      - VC_STAGE_URL
-      - DEV_CHANNEL_ID
+      - ORG_URL
+      - BLOXCHA_PYRMONT_URL
+      - BLOXCHA_MAINNET_URL
+      - CHANNEL_ID
+      - PGUSER
+      - PGHOST
+      - PGPASSWORD
+      - PGDATABASE_PYRMONT
+      - PGDATABASE_MAINNET
 
     restart: on-failure

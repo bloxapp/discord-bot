@@ -1,10 +1,10 @@
 const validatorsApi = require('../api/validators');
 
-const createEmbedMessage = async (isStage, network, validators) => {
+const createEmbedMessage = async (network, validators) => {
   return {
     color: 0x32E0C4, 
     url: 'https://www.bloxstaking.com',
-    title: `New ${network} active validators on ${isStage ? 'stage' : 'production'} `,
+    title: `New ${network} active validators on ${process.env.ENV}`,
     thumbnail: {
       url: 'https://www.bloxstaking.com/wp-content/uploads/2020/04/Blox-Staking_logo_white.png',
     },
@@ -20,9 +20,9 @@ const createEmbedMessage = async (isStage, network, validators) => {
   };
 };
 
-const loadNewValidators = async (isStage, network) => {
-  const validators = await validatorsApi.loadNewValidators(isStage, network);
-  const outputString = createEmbedMessage(isStage, network, validators);
+const loadNewValidators = async (network) => {
+  const validators = await validatorsApi.loadNewValidators(network);
+  const outputString = createEmbedMessage(network, validators);
   return outputString;
 };
 
