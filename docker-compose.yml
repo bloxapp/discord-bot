@@ -24,7 +24,8 @@ services:
       - ORG_URL
       - BLOXCHA_PYRMONT_URL
       - BLOXCHA_MAINNET_URL
-      - CHANNEL_ID
+      - ALL_CHANNEL_ID
+      - DEV_CHANNEL_ID
       - PGUSER
       - PGHOST
       - PGPASSWORD
