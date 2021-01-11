@@ -103,11 +103,17 @@ spec:
               name: config-secrets
               key: token
 
-        - name: CHANNEL_ID
+        - name: ALL_CHANNEL_ID
           valueFrom:
             secretKeyRef:
               name: config-secrets
-              key: channel_id
+              key: all_channel_id
+
+        - name: DEV_CHANNEL_ID
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: dev_channel_id
 
         - name: PGUSER
           valueFrom:

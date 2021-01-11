@@ -10,7 +10,10 @@ let bot;
 
 const emitMessage = async (func) => {
   const asyncFunc = await func();
-  // bot.channels.get(process.env.CHANNEL_ID).send({ embed: asyncFunc });
+  const channelId = process.env.ENV === 'stage'
+    ? process.env.DEV_CHANNEL_ID
+    : process.env.ALL_CHANNEL_ID;
+  // bot.channels.get(channelId).send({ embed: asyncFunc });
 }
 
 const processStatisticsTimeConfig = {
