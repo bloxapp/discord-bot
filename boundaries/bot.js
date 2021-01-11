@@ -38,37 +38,39 @@ const onMessage = async (message) => {
   if (!cmds.includes(cmd)) {
     return;
   }
-  let embed;
-  await message.channel.startTyping();
-  switch (cmd) {
-    case '!u.s':
-      embed = await loadProcessStatistics();
-      break;
-    case '!u.s.s':
-      embed = await loadProcessStatistics(true);
-      break;
-    case '!n.v':
-      embed = await loadNewValidators('pyrmont');
-      break;
-    case '!n.v.s':
-      embed = await loadNewValidators('pyrmont');
-      break;
-    case '!attr.p':
-      embed = await loadRate('pyrmont', params);
-      break;
-    case '!eff.p':
-      embed = await loadEff('pyrmont', params);
-      break;
-    case '!attr':
-      embed = await loadRate('mainnet', params);
-      break;
-    case '!eff':
-      embed = await loadEff('mainnet', params);
-      break;
-    default:
-      return;
+  try {
+    let embed;
+    await message.channel.startTyping();
+    switch (cmd) {
+      case '!u.s':
+        embed = await loadProcessStatistics();
+        break;
+      case '!u.s.s':
+        embed = await loadProcessStatistics(true);
+        break;
+      case '!n.v':
+        embed = await loadNewValidators('pyrmont');
+        break;
+      case '!n.v.s':
+        embed = await loadNewValidators('pyrmont');
+        break;
+      case '!attr.p':
+        embed = await loadRate('pyrmont', params);
+        break;
+      case '!eff.p':
+        embed = await loadEff('pyrmont', params);
+        break;
+      case '!attr':
+        embed = await loadRate('mainnet', params);
+        break;
+      case '!eff':
+        embed = await loadEff('mainnet', params);
+        break;
+    }
+    await message.reply({ embed });
+  } catch (e) {
+    console.error(`${cmd} failed:`, e);
   }
-  await message.reply({ embed });
   await message.channel.stopTyping();
 };
 
