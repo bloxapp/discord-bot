@@ -13,7 +13,7 @@ const emitMessage = async (func) => {
   const channelId = process.env.ENV === 'stage'
     ? process.env.DEV_CHANNEL_ID
     : process.env.ALL_CHANNEL_ID;
-  // bot.channels.get(channelId).send({ embed: asyncFunc });
+  bot.channels.get(channelId).send({ embed: asyncFunc });
 }
 
 const processStatisticsTimeConfig = {
@@ -33,37 +33,48 @@ const onReady = async () => {
 };
 
 const onMessage = async (message) => {
-  const cmds = ['!u.s', '!u.s.s', '!n.v', '!n.v.s', '!attr.p', '!eff.p', '!attr', '!eff'];
-  const [cmd, params] = message.content.split(' ');
-  if (!cmds.includes(cmd)) {
+  const isWrongChannel = ![process.env.ALL_CHANNEL_ID, process.env.DEV_CHANNEL_ID].includes(message.channel.id);
+  const isStageAndNotDevChannel = process.env.ENV === 'stage' && message.channel.id !== process.env.DEV_CHANNEL_ID;
+  if (isWrongChannel || isStageAndNotDevChannel) {
     return;
   }
+
+  let allowCommands = ['!u.s', '!n.v', '!attr.p', '!eff.p', '!attr', '!eff'];
+  if (process.env.ENV === 'stage') {
+    allowCommands = allowCommands.map(cmd => `${cmd}.s`);
+  }
+
+  const [cmd, params] = message.content.split(' ');
+  if (!allowCommands.includes(cmd)) {
+    return;
+  }
+
   try {
     let embed;
     await message.channel.startTyping();
     switch (cmd) {
       case '!u.s':
+      case '!u.s.s':
         embed = await loadProcessStatistics();
         break;
-      case '!u.s.s':
-        embed = await loadProcessStatistics(true);
-        break;
       case '!n.v':
-        embed = await loadNewValidators('pyrmont');
-        break;
       case '!n.v.s':
-        embed = await loadNewValidators('pyrmont');
+        embed = await loadNewValidators('mainnet');
         break;
       case '!attr.p':
-        embed = await loadRate('pyrmont', params);
+      case '!attr.p.s':
+          embed = await loadRate('pyrmont', params);
         break;
       case '!eff.p':
-        embed = await loadEff('pyrmont', params);
+      case '!eff.p.s':
+          embed = await loadEff('pyrmont', params);
         break;
       case '!attr':
-        embed = await loadRate('mainnet', params);
+      case '!attr.s':
+          embed = await loadRate('mainnet', params);
         break;
       case '!eff':
+      case '!eff.s':
         embed = await loadEff('mainnet', params);
         break;
     }
