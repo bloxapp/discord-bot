@@ -1,13 +1,19 @@
 const validatorsApi = require('../api/validators');
+const organizationsApi = require('../api/organizations');
 
-const loadValidatorsData = async (isStage) => {
-  const wallets = await validatorsApi.loadWallets(isStage);
-  const validators = await validatorsApi.loadValidators(isStage);
+const loadValidatorsData = async () => {
+  const wallets = await validatorsApi.loadWallets();
+  const validators = await validatorsApi.loadValidators();
   return { wallets, validators };
 };
 
-const createEmbedMessage = async (data, isStage) => {
-  const { wallets, validators } = data;
+const loadUsersData = async () => {
+  const users = await organizationsApi.loadStats();
+  return users;
+};
+
+const createEmbedMessage = async (data, ) => {
+  const { wallets, validators, users } = data;
   let validatorsCount = 0;
   const validatorsKeys = ['active', 'deposited'];
   for (const [key, value] of Object.entries(validators)) {
@@ -15,18 +21,17 @@ const createEmbedMessage = async (data, isStage) => {
       validatorsCount+= value;
     }    
   }
-
   return {
     color: 0x32E0C4, 
     url: 'https://www.bloxstaking.com',
-    title: `Users update statistics ${isStage ? 'stage' : 'production'}`,
+    title: `Users update statistics ${process.env.ENV}`,
     thumbnail: {
       url: 'https://www.bloxstaking.com/wp-content/uploads/2020/04/Blox-Staking_logo_white.png',
     },
     fields: [
       {
         name: 'Total registered users',
-        value: 'N/A',
+        value: users.total,
       },
       {
         name: 'Total wallets',
@@ -44,9 +49,10 @@ const createEmbedMessage = async (data, isStage) => {
   };
 };
 
-const loadProcessStatistics = async (isStage) => {
-  const validators = await loadValidatorsData(isStage);
-  const outputString = await createEmbedMessage(validators, isStage);
+const loadProcessStatistics = async () => {
+  const validators = await loadValidatorsData();
+  const users = await loadUsersData();
+  const outputString = await createEmbedMessage({ ...validators, users });
   return outputString;
 };
 

@@ -1,11 +1,14 @@
 const axios = require('axios');
 
 const organizationsApi = () => {
-  const getOrganizations = async () => { // TODO
-    return;
-  }
+  const loadStats = async () => {
+    const url = `${process.env.ORG_URL}/stats`;
+    const stats = await axios(url);
+    return stats.data.users;
+  };
+
   return {
-    getOrganizations
+    loadStats
   };
 };
 

@@ -1,17 +1,16 @@
-const app = require('express')();
-const http = require('http').createServer(app);
-const cors = require('cors');
 const dotenv = require('dotenv');
+const pgMainnet = require('./boundaries/db-mainnet');
+const pgPyrmont = require('./boundaries/db-pyrmont');
+const httpServer = require('./boundaries/http-server');
+const bot = require('./boundaries/bot');
 
 dotenv.config();
-app.use(cors());
 
-app.get('/', (req,res)=> {
-  res.send('BloxStaking Discord Bot');
-});
+async function start () {
+  await pgMainnet.start();
+  await pgPyrmont.start();
+  await httpServer.start();
+  await bot.start();
+}
 
-http.listen(process.env.PORT, () => {
-  console.log(`Listening on port ${process.env.PORT}`);
-  require('./bot');
-});
-
+start();

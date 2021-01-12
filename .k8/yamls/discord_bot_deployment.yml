@@ -78,6 +78,12 @@ spec:
         env:
         - name: PORT
           value: "5000"
+  
+        - name: ENV
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: env
 
         - name: VC_URL
           valueFrom:
@@ -85,11 +91,11 @@ spec:
               name: config-secrets
               key: vc_url
 
-        - name: VC_STAGE_URL
+        - name: ORG_URL
           valueFrom:
             secretKeyRef:
               name: config-secrets
-              key: vc_stage_url
+              key: org_url
 
         - name: TOKEN
           valueFrom:
@@ -97,14 +103,57 @@ spec:
               name: config-secrets
               key: token
 
+        - name: ALL_CHANNEL_ID
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: all_channel_id
+
         - name: DEV_CHANNEL_ID
           valueFrom:
             secretKeyRef:
               name: config-secrets
               key: dev_channel_id
 
-        - name: ALL_CHANNEL_ID
+        - name: PGUSER
           valueFrom:
             secretKeyRef:
               name: config-secrets
-              key: all_channel_id
+              key: pguser
+
+        - name: PGHOST
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: pghost
+
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: pgpassword
+
+        - name: PGDATABASE_PYRMONT
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: pgdatabase_pyrmont
+
+        - name: PGDATABASE_MAINNET
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: pgdatabase_mainnet
+
+        - name: BLOXCHA_PYRMONT_URL
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: bloxcha_pyrmont_url
+
+        - name: BLOXCHA_MAINNET_URL
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: bloxcha_mainnet_url
+
