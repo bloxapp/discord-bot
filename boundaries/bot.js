@@ -8,12 +8,11 @@ const setHour = require('../helpers/set-hour');
 
 let bot;
 
-const emitMessage = async (func) => {
-  const asyncFunc = await func();
+const emitMessage = async (data) => {  // const asyncFunc = await func();
   const channelId = process.env.ENV === 'stage'
     ? process.env.DEV_CHANNEL_ID
     : process.env.ALL_CHANNEL_ID;
-  bot.channels.get(channelId).send({ embed: asyncFunc });
+  bot.channels.get(channelId).send({ embed: data });
 }
 
 const processStatisticsTimeConfig = {
@@ -28,7 +27,7 @@ const newValidatorsTimeConfig = {
 
 const onReady = async () => {
   console.info(`Logged in as ${bot.user.username}!`);
-  runPeriodicTask(emitMessage, [loadProcessStatistics], processStatisticsTimeConfig);
+  runPeriodicTask(emitMessage, [await loadProcessStatistics()], processStatisticsTimeConfig);
   runPeriodicTask(emitMessage, [await loadNewValidators('pyrmont')], newValidatorsTimeConfig);
 };
 
@@ -39,13 +38,14 @@ const onMessage = async (message) => {
     return;
   }
 
-  let allowCommands = ['!u.s', '!n.v', '!attr.p', '!eff.p', '!attr', '!eff'];
+  const defCommands = ['!u.s', '!n.v', '!attr.p', '!eff.p', '!attr', '!eff'];
+  let allowCommands;
   if (process.env.ENV === 'stage') {
-    allowCommands = allowCommands.map(cmd => `${cmd}.s`);
+    allowCommands = defCommands.map(cmd => `${cmd}.s`);
   }
 
   const [cmd, params] = message.content.split(' ');
-  if (!allowCommands.includes(cmd)) {
+  if (!allowCommands.includes(cmd) && cmd !== '!help') {
     return;
   }
 
@@ -53,6 +53,17 @@ const onMessage = async (message) => {
     let embed;
     await message.channel.startTyping();
     switch (cmd) {
+      case '!help':
+        embed = {
+          title: `Help`,
+          fields: [
+            {
+              name: `Commands`,
+              value: defCommands.map(key => `${key}[.s]`).toString()
+            }
+          ]
+        };
+        break;
       case '!u.s':
       case '!u.s.s':
         embed = await loadProcessStatistics();
