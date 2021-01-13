@@ -42,23 +42,27 @@ const onMessage = async (message) => {
       cmd: '!u.s'
     },
     {
-      name: 'New validator',
+      name: 'New validators for pyrmont [param: minutes, default last hour]',
+      cmd: '!n.v.p'
+    },
+    {
+      name: 'New validators for mainnet [param: minutes, default last hour]',
       cmd: '!n.v'
     },
     {
-      name: 'Attestations rate for pyrmont',
+      name: 'Attestations rate for pyrmont [param: epoch diff, default 300]',
       cmd: '!attr.p'
     },
     {
-      name: 'Attestations rate for mainnet',
+      name: 'Attestations rate for mainnet [param: epoch diff, default 300]',
       cmd: '!attr'
     },
     {
-      name: 'Effectiveness for pyrmont',
+      name: 'Effectiveness for pyrmont [param: epoch diff, default 300]',
       cmd: '!eff.p'
     },
     {
-      name: 'Effectiveness for mainnet',
+      name: 'Effectiveness for mainnet [param: epoch diff, default 300]',
       cmd: '!eff'
     }
   ]
@@ -92,7 +96,11 @@ const onMessage = async (message) => {
         break;
       case '!n.v':
       case '!n.v.s':
-        embed = await loadNewValidators('mainnet');
+        embed = await loadNewValidators('mainnet', params);
+        break;
+      case '!n.v.p':
+      case '!n.v.p.s':
+        embed = await loadNewValidators('pyrmont', params);
         break;
       case '!attr.p':
       case '!attr.p.s':

@@ -23,10 +23,9 @@ const createEmbedMessage = async (network, { rate, from, to }) => {
   };
 };
 
-const getRate = async (network, params) => {
+const getRate = async (network, diff = 300) => {
   const stats = await bloxchaApi.loadStats(network);
   const { data: { epoch } } = stats;
-  const diff = params || 300;
   const db = network === 'pyrmont'
     ? pgPyrmont
     : pgMainnet;
