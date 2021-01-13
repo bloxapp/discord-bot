@@ -1,10 +1,8 @@
-const runPeriodicTask = (func, args, timeConfig) => {
+const runPeriodicTask = async (func, args, timeConfig, sendMessageFunc) => {
   const { start, interval } = timeConfig;
-  setTimeout(() => {
-    func(...args);
-    setInterval(() => { 
-      func(...args);
-    }, interval)
+  setTimeout(async() => {
+    sendMessageFunc(await func(...args));
+    setInterval(async () => sendMessageFunc(await func(...args)), interval);
   }, start);
 };
 
