@@ -39,34 +39,37 @@ const onMessage = async (message) => {
   const commands = [
     {
       name: 'User statistics',
-      cmd: 'u.s'
+      cmd: '!u.s'
     },
     {
       name: 'New validator',
-      cmd: 'n.v'
+      cmd: '!n.v'
     },
     {
       name: 'Attestations rate for pyrmont',
-      cmd: 'attr.p'
+      cmd: '!attr.p'
     },
     {
       name: 'Attestations rate for mainnet',
-      cmd: 'attr'
+      cmd: '!attr'
     },
     {
       name: 'Effectiveness for pyrmont',
-      cmd: 'eff.p'
+      cmd: '!eff.p'
     },
     {
       name: 'Effectiveness for mainnet',
-      cmd: 'eff'
+      cmd: '!eff'
     }
   ]
   const prefix = process.env.ENV === 'stage' ? '.s' : '';
   const allowCommands = commands.map(({ cmd }) => `${cmd}${prefix}`);
-
   const [cmd, params] = message.content.split(' ');
   if (!allowCommands.includes(cmd) && cmd !== '!help') {
+    return;
+  }
+  const isProdAndDevChannel = process.env.ENV !== 'stage' && message.channel.id === process.env.DEV_CHANNEL_ID;
+  if (isProdAndDevChannel && cmd === '!help') {
     return;
   }
 
