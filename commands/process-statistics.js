@@ -35,6 +35,10 @@ const createEmbedMessage = async (data, ) => {
         value: wallets.active + wallets.disabled + wallets.offline,
       },
       {
+        name: 'Active wallets',
+        value: wallets.active,
+      },
+      {
         name: 'Offline wallets',
         value: wallets.offline,
       },
