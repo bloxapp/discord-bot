@@ -3,32 +3,41 @@ const loadProcessStatistics = require('../commands/process-statistics');
 const loadNewValidators = require('../commands/new-validators');
 const loadRate = require('../commands/attestation-rate');
 const loadEff = require('../commands/effectiveness');
-const runPeriodicTask = require('../periodic-task');
-const setHour = require('../helpers/set-hour');
+const cron = require('node-cron');
 
 let bot;
 
-const emitMessage = async (data) => {  // const asyncFunc = await func();
+const emitMessage = (data) => {
+  if (!data) return;
   const channelId = process.env.ENV === 'stage'
     ? process.env.DEV_CHANNEL_ID
     : process.env.ALL_CHANNEL_ID;
   bot.channels.get(channelId).send({ embed: data });
 }
 
+const statisticsPeriodMin = 60 * 12; // 12 hours
 const processStatisticsTimeConfig = {
-  start: setHour(),
-  interval: 1000 * 60 * 60 * 12 // half day
+  start: 0,
+  interval: 1000 * 60 * statisticsPeriodMin // half day
 };
 
+const validatorsPeriodMin = 1;
 const newValidatorsTimeConfig = {
-  start: setHour(),
-  interval: 1000 * 60 * 29 // 29 mins,
+  start: 0,
+  interval: 1000 * 60 * validatorsPeriodMin // 29 mins,
 };
 
 const onReady = async () => {
   console.info(`Logged in as ${bot.user.username}!`);
-  runPeriodicTask(emitMessage, [await loadProcessStatistics()], processStatisticsTimeConfig);
-  runPeriodicTask(emitMessage, [await loadNewValidators('pyrmont')], newValidatorsTimeConfig);
+  cron.schedule('*/ * * * *', async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
+  cron.schedule('* * * * *', async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
+  cron.schedule('20 1,20 * * *', async() => {
+    emitMessage(await loadProcessStatistics());
+    emitMessage(await loadRate('pyrmont'));
+    emitMessage(await loadEff('pyrmont'));
+    emitMessage(await loadRate('mainnet'));
+    emitMessage(await loadEff('mainnet'));
+  });
 };
 
 const onMessage = async (message) => {
@@ -38,11 +47,34 @@ const onMessage = async (message) => {
     return;
   }
 
-  const defCommands = ['!u.s', '!n.v', '!attr.p', '!eff.p', '!attr', '!eff'];
-  let allowCommands;
-  if (process.env.ENV === 'stage') {
-    allowCommands = defCommands.map(cmd => `${cmd}.s`);
-  }
+  const commands = [
+    {
+      name: 'User statistics',
+      cmd: 'u.s'
+    },
+    {
+      name: 'New validator',
+      cmd: 'n.v'
+    },
+    {
+      name: 'Attestations rate for pyrmont',
+      cmd: 'attr.p'
+    },
+    {
+      name: 'Attestations rate for mainnet',
+      cmd: 'attr'
+    },
+    {
+      name: 'Effectiveness for pyrmont',
+      cmd: 'eff.p'
+    },
+    {
+      name: 'Effectiveness for mainnet',
+      cmd: 'eff'
+    }
+  ]
+  const prefix = process.env.ENV === 'stage' ? '.s' : '';
+  const allowCommands = commands.map(({ cmd }) => `${cmd}${prefix}`);
 
   const [cmd, params] = message.content.split(' ');
   if (!allowCommands.includes(cmd) && cmd !== '!help') {
@@ -55,13 +87,11 @@ const onMessage = async (message) => {
     switch (cmd) {
       case '!help':
         embed = {
-          title: `Help`,
-          fields: [
-            {
-              name: `Commands`,
-              value: defCommands.map(key => `${key}[.s]`).toString()
-            }
-          ]
+          title: `Commands`,
+          fields: commands.map(item => ({
+            name: item.name,
+            value: `${item.cmd}${prefix ? ` - prod, ${item.cmd}${prefix} - stage`: ''}`
+          }))
         };
         break;
       case '!u.s':
@@ -99,7 +129,7 @@ const onMessage = async (message) => {
 
 async function start () {
   bot = new Discord.Client();
-  bot.login(process.env.TOKEN);    
+  bot.login(process.env.TOKEN);
   bot.on('ready', onReady);
   bot.on('message', onMessage);
   console.info('Discord bot is connected correctly!');

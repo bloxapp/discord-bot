@@ -20,8 +20,11 @@ const createEmbedMessage = async (network, validators) => {
   };
 };
 
-const loadNewValidators = async (network) => {
-  const validators = await validatorsApi.loadNewValidators(network);
+const loadNewValidators = async (network, periodInMin) => {
+  const validators = await validatorsApi.loadNewValidators(network, periodInMin);
+  if (validators.length === 0) {
+    return;
+  }
   const outputString = createEmbedMessage(network, validators);
   return outputString;
 };

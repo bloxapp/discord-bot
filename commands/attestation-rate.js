@@ -32,6 +32,10 @@ const getRate = async (network, params) => {
     : pgMainnet;
   const from = epoch - diff;
   const to = epoch;
+  console.log(`SELECT avg(status)*100 as rate
+  FROM validators v
+  left join attestation_assignments on attestation_assignments.validatorindex = v.validatorindex
+  where epoch > ${from} and epoch < ${to};`);
   const { rate } = (await db.get().query(`SELECT avg(status)*100 as rate
     FROM validators v
     left join attestation_assignments on attestation_assignments.validatorindex = v.validatorindex
