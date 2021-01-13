@@ -1,13 +1,10 @@
 const validatorsApi = require('../api/validators');
+const msgHeader = require('../helpers/msg-header');
 
 const createEmbedMessage = async (network, validators) => {
   return {
-    color: 0x32E0C4, 
-    url: 'https://www.bloxstaking.com',
+    ...msgHeader,
     title: `New ${network} active validators on ${process.env.ENV}`,
-    thumbnail: {
-      url: 'https://www.bloxstaking.com/wp-content/uploads/2020/04/Blox-Staking_logo_white.png',
-    },
     fields: validators.map((validator) => {
       const { id, network } = validator;
       const currentNetwork = network === 'mainnet' ? '' : `${network}.`;

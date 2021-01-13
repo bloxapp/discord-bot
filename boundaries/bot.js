@@ -1,8 +1,8 @@
 const Discord = require('discord.js');
 const loadProcessStatistics = require('../commands/process-statistics');
 const loadNewValidators = require('../commands/new-validators');
-const loadRate = require('../commands/attestation-rate');
-const loadEff = require('../commands/effectiveness');
+const { getRate, getAvgRate } = require('../commands/attestation-rate');
+const { getEff, getAvgEff } = require('../commands/effectiveness');
 const cron = require('node-cron');
 
 let bot;
@@ -20,12 +20,16 @@ const onReady = async () => {
   console.info(`Logged in as ${bot.user.username}!`);
   cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
   cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
-  cron.schedule('30 14,15 * * *', async() => {
+  cron.schedule('0 6,18 * * *', async() => {
     emitMessage(await loadProcessStatistics());
-    emitMessage(await loadRate('pyrmont'));
-    emitMessage(await loadEff('pyrmont'));
-    emitMessage(await loadRate('mainnet'));
-    emitMessage(await loadEff('mainnet'));
+    emitMessage(await getRate('pyrmont'));
+    emitMessage(await getEff('pyrmont'));
+    emitMessage(await getAvgRate('pyrmont'));
+    emitMessage(await getAvgEff('pyrmont'));
+    emitMessage(await getRate('mainnet'));
+    emitMessage(await getEff('mainnet'));
+    emitMessage(await getAvgRate('mainnet'));
+    emitMessage(await getAvgEff('mainnet'));
   });
 };
 
@@ -64,7 +68,23 @@ const onMessage = async (message) => {
     {
       name: 'Effectiveness for mainnet [param: epoch diff, default 300]',
       cmd: '!eff'
-    }
+    },
+    {
+      name: 'Avg attestations rate for mainnet [param: epoch diff, default 300]',
+      cmd: '!attr.avg'
+    },
+    {
+      name: 'Avg attestations rate for pyrmont [param: epoch diff, default 300]',
+      cmd: '!attr.p.avg'
+    },
+    {
+      name: 'Avg effectiveness for mainnet [param: epoch diff, default 300]',
+      cmd: '!eff.avg'
+    },
+    {
+      name: 'Avg effectiveness for pyrmont [param: epoch diff, default 300]',
+      cmd: '!eff.p.avg'
+    },
   ]
   const prefix = process.env.ENV === 'stage' ? '.s' : '';
   const allowCommands = commands.map(({ cmd }) => `${cmd}${prefix}`);
@@ -104,19 +124,35 @@ const onMessage = async (message) => {
         break;
       case '!attr.p':
       case '!attr.p.s':
-          embed = await loadRate('pyrmont', params);
+          embed = await getRate('pyrmont', params);
         break;
       case '!eff.p':
       case '!eff.p.s':
-          embed = await loadEff('pyrmont', params);
+          embed = await getEff('pyrmont', params);
         break;
       case '!attr':
       case '!attr.s':
-          embed = await loadRate('mainnet', params);
+          embed = await getRate('mainnet', params);
         break;
       case '!eff':
       case '!eff.s':
-        embed = await loadEff('mainnet', params);
+        embed = await getEff('mainnet', params);
+        break;
+      case '!attr.avg':
+      case '!attr.avg.s':
+          embed = await getAvgRate('mainnet', params);
+        break;
+      case '!attr.p.avg':
+      case '!attr.p.avg.s':
+          embed = await getAvgRate('pyrmont', params);
+        break;
+      case '!eff.avg':
+      case '!eff.avg.s':
+        embed = await getAvgEff('mainnet', params);
+        break;
+      case '!eff.p.avg':
+      case '!eff.p.avg.s':
+        embed = await getAvgEff('pyrmont', params);
         break;
     }
     await message.reply({ embed });

@@ -1,5 +1,6 @@
 const validatorsApi = require('../api/validators');
 const organizationsApi = require('../api/organizations');
+const msgHeader = require('../helpers/msg-header');
 
 const loadValidatorsData = async () => {
   const wallets = await validatorsApi.loadWallets();
@@ -22,12 +23,8 @@ const createEmbedMessage = async (data, ) => {
     }    
   }
   return {
-    color: 0x32E0C4, 
-    url: 'https://www.bloxstaking.com',
+    ...msgHeader,
     title: `Users update statistics ${process.env.ENV}`,
-    thumbnail: {
-      url: 'https://www.bloxstaking.com/wp-content/uploads/2020/04/Blox-Staking_logo_white.png',
-    },
     fields: [
       {
         name: 'Total registered users',
