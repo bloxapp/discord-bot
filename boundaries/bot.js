@@ -15,22 +15,11 @@ const emitMessage = (data) => {
   bot.channels.get(channelId).send({ embed: data });
 }
 
-const statisticsPeriodMin = 60 * 12; // 12 hours
-const processStatisticsTimeConfig = {
-  start: 0,
-  interval: 1000 * 60 * statisticsPeriodMin // half day
-};
-
-const validatorsPeriodMin = 1;
-const newValidatorsTimeConfig = {
-  start: 0,
-  interval: 1000 * 60 * validatorsPeriodMin // 29 mins,
-};
-
 const onReady = async () => {
+  const validatorsPeriodMin = 1;
   console.info(`Logged in as ${bot.user.username}!`);
-  cron.schedule('*/ * * * *', async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
-  cron.schedule('* * * * *', async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
+  cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
+  cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
   cron.schedule('20 1,20 * * *', async() => {
     emitMessage(await loadProcessStatistics());
     emitMessage(await loadRate('pyrmont'));
