@@ -20,7 +20,7 @@ const onReady = async () => {
   console.info(`Logged in as ${bot.user.username}!`);
   cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
   cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
-  cron.schedule('0 8,20 * * *', async() => {
+  cron.schedule('30 14,15 * * *', async() => {
     emitMessage(await loadProcessStatistics());
     emitMessage(await loadRate('pyrmont'));
     emitMessage(await loadEff('pyrmont'));
