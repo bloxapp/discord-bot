@@ -17,6 +17,7 @@ const createEmbedMessage = async (data, ) => {
   const { wallets, validators, users } = data;
   let validatorsCount = 0;
   const validatorsKeys = ['active', 'deposited'];
+  const { pyrmont, mainnet } = validators;
   for (const [key, value] of Object.entries(validators)) {
     if(validatorsKeys.includes(key)) {
       validatorsCount+= value;
@@ -24,28 +25,57 @@ const createEmbedMessage = async (data, ) => {
   }
   return {
     ...msgHeader,
-    title: `Users update statistics ${process.env.ENV}`,
+    title: `Statistics ${process.env.ENV}`,
     fields: [
       {
-        name: 'Total registered users',
+        name: 'Users',
         value: users.total,
       },
       {
-        name: 'Total wallets',
-        value: wallets.active + wallets.disabled + wallets.offline,
+        name: 'Wallets',
+        value: '-------------------------'
       },
+      ...Object.keys(wallets).reduce((aggr, key) => {
+        const name = key === 'deprecated_version'
+          ? 'Deprecated'
+          : `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+        aggr.push({
+          name,
+          value: wallets[key],
+          inline: true
+        });
+        return aggr;
+      }, [{ name: 'Total', value: Object.values(wallets).reduce((a, b) => a + b, 0), inline: true }]),
       {
-        name: 'Active wallets',
-        value: wallets.active,
+        name: 'Pyrmont Validators',
+        value: '-------------------------'
       },
+      ...Object.keys(pyrmont).reduce((aggr, key) => {
+        const name = key === 'unknown_status'
+          ? 'Unknown'
+          : `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+        aggr.push({
+          name,
+          value: pyrmont[key],
+          inline: true
+        });
+        return aggr;
+      }, []),
       {
-        name: 'Offline wallets',
-        value: wallets.offline,
+        name: 'Mainnet Validators',
+        value: '-------------------------'
       },
-      {
-        name: 'Total validators',
-        value: validatorsCount,
-      },                  
+      ...Object.keys(mainnet).reduce((aggr, key) => {
+        const name = key === 'unknown_status'
+          ? 'Unknown'
+          : `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+        aggr.push({
+          name,
+          value: mainnet[key],
+          inline: true
+        });
+        return aggr;
+      }, []),
     ],
   };
 };
