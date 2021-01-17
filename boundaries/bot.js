@@ -18,9 +18,10 @@ const emitMessage = (data) => {
 const onReady = async () => {
   const validatorsPeriodMin = 1;
   console.info(`Logged in as ${bot.user.username}!`);
-  cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
-  cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
-  cron.schedule('0 6,18 * * *', async() => {
+  // cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
+  // cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
+  // cron.schedule('0 6,18 * * *', async() => {
+  /*
     emitMessage(await loadProcessStatistics());
     emitMessage(await getRate('pyrmont'));
     emitMessage(await getEff('pyrmont'));
@@ -31,6 +32,7 @@ const onReady = async () => {
     emitMessage(await getAvgRate('mainnet'));
     emitMessage(await getAvgEff('mainnet'));
   });
+  */
 };
 
 const onMessage = async (message) => {
