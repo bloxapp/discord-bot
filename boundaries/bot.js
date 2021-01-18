@@ -18,10 +18,7 @@ const emitMessage = (data) => {
 const onReady = async () => {
   const validatorsPeriodMin = 1;
   console.info(`Logged in as ${bot.user.username}!`);
-  return;
   cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => {
-    emitMessage(await loadNewValidators({ network: 'pyrmont', type: 'active', periodInMin: validatorsPeriodMin }));
-    emitMessage(await loadNewValidators({ network: 'pyrmont', type: 'deposit', periodInMin: validatorsPeriodMin }));
     emitMessage(await loadNewValidators({ network: 'mainnet', type: 'active', periodInMin: validatorsPeriodMin }));
     emitMessage(await loadNewValidators({ network: 'mainnet', type: 'deposit', periodInMin: validatorsPeriodMin }));
   });
