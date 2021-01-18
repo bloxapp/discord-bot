@@ -90,7 +90,11 @@ const onMessage = async (message) => {
   ]
   const prefix = process.env.ENV === 'stage' ? '.s' : '';
   const allowCommands = commands.map(({ cmd }) => `${cmd}${prefix}`);
-  const [cmd, param1, param2] = message.content.split(' ');
+  const parts = message.content.split(' ');
+  const [cmd] = parts;
+  const params = parts.slice(1);
+  const defaultValidatorTypes = ['deposit', 'active'];
+
   if (!allowCommands.includes(cmd) && cmd !== '!help') {
     return;
   }
@@ -118,43 +122,51 @@ const onMessage = async (message) => {
         break;
       case '!n.v':
       case '!n.v.s':
-        embed = await loadNewValidators({ network: 'mainnet', type: 'param2', periodInMin: param1 });
+        await (async () => {
+          const [type] = params.filter(value => defaultValidatorTypes.includes(value));
+          const [periodInMin] = params.filter(value => value !== type);
+          embed = await loadNewValidators({ network: 'mainnet', type, periodInMin });  
+        })()
         break;
       case '!n.v.p':
       case '!n.v.p.s':
-        embed = await loadNewValidators({ network: 'mainnet', type: param2, periodInMin: param1 });
+        await (async () => {
+          const [type] = params.filter(value => defaultValidatorTypes.includes(value));
+          const [periodInMin] = params.filter(value => value !== type);
+          embed = await loadNewValidators({ network: 'pyrmont', type, periodInMin });
+        })();
         break;
       case '!attr.p':
       case '!attr.p.s':
-          embed = await getRate('pyrmont', param1);
+          embed = await getRate('pyrmont', params[0]);
         break;
       case '!eff.p':
       case '!eff.p.s':
-          embed = await getEff('pyrmont', param1);
+          embed = await getEff('pyrmont', params[0]);
         break;
       case '!attr':
       case '!attr.s':
-          embed = await getRate('mainnet', param1);
+          embed = await getRate('mainnet', params[0]);
         break;
       case '!eff':
       case '!eff.s':
-        embed = await getEff('mainnet', param1);
+        embed = await getEff('mainnet', params[0]);
         break;
       case '!attr.avg':
       case '!attr.avg.s':
-          embed = await getAvgRate('mainnet', param1);
+          embed = await getAvgRate('mainnet', params[0]);
         break;
       case '!attr.p.avg':
       case '!attr.p.avg.s':
-          embed = await getAvgRate('pyrmont', param1);
+          embed = await getAvgRate('pyrmont', params[0]);
         break;
       case '!eff.avg':
       case '!eff.avg.s':
-        embed = await getAvgEff('mainnet', param1);
+        embed = await getAvgEff('mainnet', params[0]);
         break;
       case '!eff.p.avg':
       case '!eff.p.avg.s':
-        embed = await getAvgEff('pyrmont', param1);
+        embed = await getAvgEff('pyrmont', params[0]);
         break;
     }
     await message.reply({ embed });

@@ -1,10 +1,10 @@
 const validatorsApi = require('../api/validators');
 const msgHeader = require('../helpers/msg-header');
 
-const createEmbedMessage = async (network, validators) => {
+const createEmbedMessage = async (network, type, validators) => {
   return {
     ...msgHeader,
-    title: `New ${network} active validators on ${process.env.ENV}`,
+    title: `New ${network} ${type} validators on ${process.env.ENV}`,
     fields: validators.map((validator) => {
       const { id, network } = validator;
       const currentNetwork = network === 'mainnet' ? '' : `${network}.`;
@@ -22,7 +22,7 @@ const loadNewValidators = async ({ network, type = 'active', periodInMin = 60 })
   if (validators.length === 0) {
     return;
   }
-  const outputString = createEmbedMessage(network, validators);
+  const outputString = createEmbedMessage(network, type, validators);
   return outputString;
 };
 
