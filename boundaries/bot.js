@@ -18,8 +18,12 @@ const emitMessage = (data) => {
 const onReady = async () => {
   const validatorsPeriodMin = 1;
   console.info(`Logged in as ${bot.user.username}!`);
-  cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('pyrmont', validatorsPeriodMin)));
-  cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => emitMessage(await loadNewValidators('mainnet', validatorsPeriodMin)));
+  cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => {
+    emitMessage(await loadNewValidators({ network: 'pyrmont', type: 'active', periodInMin: validatorsPeriodMin }));
+    emitMessage(await loadNewValidators({ network: 'pyrmont', type: 'deposit', periodInMin: validatorsPeriodMin }));
+    emitMessage(await loadNewValidators({ network: 'mainnet', type: 'active', periodInMin: validatorsPeriodMin }));
+    emitMessage(await loadNewValidators({ network: 'mainnet', type: 'deposit', periodInMin: validatorsPeriodMin }));
+  });
   cron.schedule('0 6,18 * * *', async() => {
     emitMessage(await loadProcessStatistics());
     emitMessage(await getRate('pyrmont'));
@@ -88,7 +92,11 @@ const onMessage = async (message) => {
   ]
   const prefix = process.env.ENV === 'stage' ? '.s' : '';
   const allowCommands = commands.map(({ cmd }) => `${cmd}${prefix}`);
-  const [cmd, params] = message.content.split(' ');
+  const parts = message.content.split(' ');
+  const [cmd] = parts;
+  const params = parts.slice(1);
+  const defaultValidatorTypes = ['deposit', 'active'];
+
   if (!allowCommands.includes(cmd) && cmd !== '!help') {
     return;
   }
@@ -116,43 +124,51 @@ const onMessage = async (message) => {
         break;
       case '!n.v':
       case '!n.v.s':
-        embed = await loadNewValidators('mainnet', params);
+        await (async () => {
+          const [type] = params.filter(value => defaultValidatorTypes.includes(value));
+          const [periodInMin] = params.filter(value => value !== type);
+          embed = await loadNewValidators({ network: 'mainnet', type, periodInMin });  
+        })()
         break;
       case '!n.v.p':
       case '!n.v.p.s':
-        embed = await loadNewValidators('pyrmont', params);
+        await (async () => {
+          const [type] = params.filter(value => defaultValidatorTypes.includes(value));
+          const [periodInMin] = params.filter(value => value !== type);
+          embed = await loadNewValidators({ network: 'pyrmont', type, periodInMin });
+        })();
         break;
       case '!attr.p':
       case '!attr.p.s':
-          embed = await getRate('pyrmont', params);
+          embed = await getRate('pyrmont', params[0]);
         break;
       case '!eff.p':
       case '!eff.p.s':
-          embed = await getEff('pyrmont', params);
+          embed = await getEff('pyrmont', params[0]);
         break;
       case '!attr':
       case '!attr.s':
-          embed = await getRate('mainnet', params);
+          embed = await getRate('mainnet', params[0]);
         break;
       case '!eff':
       case '!eff.s':
-        embed = await getEff('mainnet', params);
+        embed = await getEff('mainnet', params[0]);
         break;
       case '!attr.avg':
       case '!attr.avg.s':
-          embed = await getAvgRate('mainnet', params);
+          embed = await getAvgRate('mainnet', params[0]);
         break;
       case '!attr.p.avg':
       case '!attr.p.avg.s':
-          embed = await getAvgRate('pyrmont', params);
+          embed = await getAvgRate('pyrmont', params[0]);
         break;
       case '!eff.avg':
       case '!eff.avg.s':
-        embed = await getAvgEff('mainnet', params);
+        embed = await getAvgEff('mainnet', params[0]);
         break;
       case '!eff.p.avg':
       case '!eff.p.avg.s':
-        embed = await getAvgEff('pyrmont', params);
+        embed = await getAvgEff('pyrmont', params[0]);
         break;
     }
     await message.reply({ embed });
