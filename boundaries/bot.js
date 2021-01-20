@@ -26,6 +26,7 @@ const onReady = async () => {
   });
   cron.schedule('0 6,18 * * *', async() => {
     emitMessage(await loadProcessStatistics());
+    /*
     emitMessage(await getRate('pyrmont'));
     emitMessage(await getEff('pyrmont'));
     emitMessage(await getAvgRate('pyrmont'));
@@ -34,6 +35,7 @@ const onReady = async () => {
     emitMessage(await getEff('mainnet'));
     emitMessage(await getAvgRate('mainnet'));
     emitMessage(await getAvgEff('mainnet'));
+    */
   });
 };
 
