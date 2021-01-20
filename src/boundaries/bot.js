@@ -1,7 +1,8 @@
 const Discord = require('discord.js');
 const loadProcessStatistics = require('../commands/process-statistics');
 const loadNewValidators = require('../commands/new-validators');
-const { getRate, getAvgRate } = require('../commands/attestation-rate');
+// const { getRate, getAvgRate } = require('../commands/attestation-rate');
+import AttestationRate from '../commands/attestation-rate';
 const { getEff, getAvgEff } = require('../commands/effectiveness');
 const cron = require('node-cron');
 
@@ -16,6 +17,7 @@ const emitMessage = (data) => {
 }
 
 const onReady = async () => {
+  await AttestationRate.getRate('pyrmont');
   const validatorsPeriodMin = 1;
   console.info(`Logged in as ${bot.user.username}!`);
   cron.schedule(`*/${validatorsPeriodMin} * * * *`, async() => {
@@ -26,13 +28,13 @@ const onReady = async () => {
   });
   cron.schedule('0 6,18 * * *', async() => {
     emitMessage(await loadProcessStatistics());
-    emitMessage(await getRate('pyrmont'));
+    // emitMessage(await getRate('pyrmont'));
     emitMessage(await getEff('pyrmont'));
-    emitMessage(await getAvgRate('pyrmont'));
+    // emitMessage(await getAvgRate('pyrmont'));
     emitMessage(await getAvgEff('pyrmont'));
-    emitMessage(await getRate('mainnet'));
+    // emitMessage(await getRate('mainnet'));
     emitMessage(await getEff('mainnet'));
-    emitMessage(await getAvgRate('mainnet'));
+    // emitMessage(await getAvgRate('mainnet'));
     emitMessage(await getAvgEff('mainnet'));
   });
 };
@@ -138,21 +140,22 @@ const onMessage = async (message) => {
           embed = await loadNewValidators({ network: 'pyrmont', type, periodInMin });
         })();
         break;
-      case '!attr.p':
-      case '!attr.p.s':
-          embed = await getRate('pyrmont', params[0]);
-        break;
       case '!eff.p':
       case '!eff.p.s':
           embed = await getEff('pyrmont', params[0]);
         break;
-      case '!attr':
-      case '!attr.s':
-          embed = await getRate('mainnet', params[0]);
-        break;
       case '!eff':
       case '!eff.s':
         embed = await getEff('mainnet', params[0]);
+        break;
+      /*
+      case '!attr.p':
+      case '!attr.p.s':
+          embed = await getRate('pyrmont', params[0]);
+        break;
+      case '!attr':
+      case '!attr.s':
+          embed = await getRate('mainnet', params[0]);
         break;
       case '!attr.avg':
       case '!attr.avg.s':
@@ -162,6 +165,7 @@ const onMessage = async (message) => {
       case '!attr.p.avg.s':
           embed = await getAvgRate('pyrmont', params[0]);
         break;
+      */
       case '!eff.avg':
       case '!eff.avg.s':
         embed = await getAvgEff('mainnet', params[0]);
