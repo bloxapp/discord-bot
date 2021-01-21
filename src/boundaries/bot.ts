@@ -72,6 +72,10 @@ const onMessage = async (message) => {
     return;
   }
 
+  if (query['env'] !== process.env.ENV) {
+    return;
+  }
+
   try {
     let embed;
     await message.channel.startTyping();
