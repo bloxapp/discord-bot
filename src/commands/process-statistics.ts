@@ -94,6 +94,6 @@ export default class ProcessStatistics {
     const validators = await this.loadValidatorsData();
     const users = await this.loadUsersData();
     const outputString = await this.createEmbedMessage({ ...validators, users });
-    return outputString;
+    return [outputString];
   };
 }
