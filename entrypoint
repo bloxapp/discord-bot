@@ -4,5 +4,5 @@ export PORT=5000
 
 echo "sleep 5"
 sleep 5
-echo "after sleep 5" && yarn start
+echo "after sleep 5" && yarn server
 

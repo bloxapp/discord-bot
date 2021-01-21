@@ -10,6 +10,7 @@ RUN apk update && apk upgrade && \
 
 COPY package*.json $APP_WORKDIR
 RUN yarn global add nodemon
+RUN yarn global add typescript
 
 WORKDIR $APP_WORKDIR
 RUN yarn install && mv /opt/app/node_modules /node_modules
@@ -19,5 +20,7 @@ RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
 
 COPY . $APP_WORKDIR
+
+RUN yarn build
 
 ENTRYPOINT ["/entrypoint"]

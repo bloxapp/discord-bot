@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const validatorsApi = () => {
   const loadWallets = async () => {
@@ -27,4 +27,4 @@ const validatorsApi = () => {
   };
 };
 
-module.exports = validatorsApi();
+export default validatorsApi();
