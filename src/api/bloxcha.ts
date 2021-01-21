@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const bloxchaApi = () => {
   const loadStats = async (network) => {
@@ -14,4 +14,4 @@ const bloxchaApi = () => {
   };
 };
 
-module.exports = bloxchaApi();
+export default bloxchaApi();

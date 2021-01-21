@@ -1,10 +1,11 @@
-const bloxchaApi = require('../api/bloxcha');
-const pgPyrmont = require('../boundaries/db-pyrmont');
-const pgMainnet = require('../boundaries/db-mainnet');
-const msgHeader = require('../helpers/msg-header');
+import bloxchaApi from '../api/bloxcha';
+import pgPyrmont from '../boundaries/db-pyrmont';
+import pgMainnet from '../boundaries/db-mainnet';
+import msgHeader from '../helpers/msg-header';
+import { Command } from './decorators/command-decorator';
 
-export default class AttestationRate extends ProcessClass {
-  async createEmbedMessage(network, { rate, from, to }) {
+export default class AttestationRate {
+  static async createEmbedMessage(network, { rate, from, to }) {
     return {
       ...msgHeader,
       title: `${network} attestation rate on ${process.env.ENV} `,
@@ -21,7 +22,7 @@ export default class AttestationRate extends ProcessClass {
     };
   }
 
-  async createAvgEmbedMessage(network, summary) {
+  static async createAvgEmbedMessage(network, summary) {
     return {
       ...msgHeader,
       title: `${network} avg attestation rate on ${process.env.ENV} `,
@@ -29,31 +30,40 @@ export default class AttestationRate extends ProcessClass {
     };
   }
 
-  @Command('attr', 'Attestations rate')
-  static async getRate(network, diff = 300) {
+  @Command({
+    cmd: 'attr',
+    description: 'Attestations rate',
+    args: ['network', 'customNumber']
+  })
+  static async getRate({ network = 'mainnet', customNumber = 300 }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'
       ? pgPyrmont
       : pgMainnet;
-    const from = epoch - diff;
+    const from = epoch - customNumber;
     const to = epoch;
     const { rate } = (await db.get().query(`SELECT avg(status)*100 as rate
       FROM validators v
       left join attestation_assignments on attestation_assignments.validatorindex = v.validatorindex
       where epoch > ${from} and epoch < ${to};`)
     ).rows[0];
-    const outputString = createEmbedMessage(network, { rate, from, to });
+    const outputString = this.createEmbedMessage(network, { rate, from, to });
     return outputString;
   }
 
-  async getAvgRate (network, diff = 300) {
+  @Command({
+    cmd: 'attr.avg',
+    description: 'Avg attestations rate',
+    args: ['network', 'customNumber']
+  })
+  static async getAvgRate ({ network = 'mainnet', customNumber = 300 }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'
       ? pgPyrmont
       : pgMainnet;
-    const from = epoch - diff;
+    const from = epoch - customNumber;
     const to = epoch;
     const { rows } = await db.get().query(`SELECT v.validatorindex, avg(status)*100 as rate
       FROM validators v
@@ -79,14 +89,7 @@ export default class AttestationRate extends ProcessClass {
     Object.keys(summary).forEach(key => {
       summary[key].avg = summary[key].avg / summary[key].validators;
     });
-    const outputString = createAvgEmbedMessage(network, summary);
+    const outputString = this.createAvgEmbedMessage(network, summary);
     return outputString;
-  }
-}
-
-function Command(metadata) {
-  return (target, key, descriptor) => {
-    console.log('====metadata', metadata);
-    console.log({target, key, descriptor})
   }
 }

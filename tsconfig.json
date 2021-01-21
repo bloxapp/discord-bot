@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "declaration": false,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "noLib": false,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -9,7 +13,7 @@
     "allowJs": true,
     "outDir": "./dist",
     "baseUrl": "./src"
-  },
+},
   "include": [
     "src/**/*"
   ],

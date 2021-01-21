@@ -1,4 +1,4 @@
-const axios = require('axios');
+import axios from 'axios';
 
 const organizationsApi = () => {
   const loadStats = async () => {
@@ -12,4 +12,4 @@ const organizationsApi = () => {
   };
 };
 
-module.exports = organizationsApi();
+export default organizationsApi();
