@@ -83,7 +83,6 @@ const onMessage = async (message) => {
           value: `!${item.cmd}`
         }))
       };
-      console.log(embed)
     } else {
       const { func, target, args = [] } = registeredCommands.find(item => item.cmd === cmd);
       const params = Object.keys(query).reduce((result, key) => {
