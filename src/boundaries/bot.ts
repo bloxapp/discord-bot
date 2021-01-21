@@ -72,7 +72,7 @@ const onMessage = async (message) => {
     return;
   }
 
-  if (query['env'] !== process.env.ENV) {
+  if (query['env'] && query['env'] !== process.env.ENV) {
     return;
   }
 
