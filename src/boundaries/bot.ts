@@ -33,8 +33,9 @@ const onReady = async () => {
   for (const scheduler of registeredSchedulers) {
     cron.schedule(scheduler.cron, async() => {
       const { func, target, args = {} } = scheduler;
-      const items = await func.bind(target)(args);
-      items.forEach(msg => emitMessage(msg));
+      const result = await func.bind(target)(args);
+      const messages = Array.isArray(result) ? result : [result];
+      messages.forEach(msg => emitMessage(msg));
     });
   }
   console.info(`Logged in as ${bot.user.username}!`);
