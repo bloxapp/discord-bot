@@ -45,7 +45,7 @@ export default class AttestationRate {
     const to = epoch;
     const { rate } = (await db.get().query(`SELECT avg(status)*100 as rate
       FROM validators v
-      left join attestation_assignments on attestation_assignments.validatorindex = v.validatorindex
+      left join attestation_assignments_p on attestation_assignments_p.validatorindex = v.validatorindex
       where epoch > ${from} and epoch < ${to};`)
     ).rows[0];
     const outputString = this.createEmbedMessage(network, { rate, from, to });
@@ -67,7 +67,7 @@ export default class AttestationRate {
     const to = epoch;
     const { rows } = await db.get().query(`SELECT v.validatorindex, avg(status)*100 as rate
       FROM validators v
-      left join attestation_assignments on attestation_assignments.validatorindex = v.validatorindex
+      left join attestation_assignments_p on attestation_assignments_p.validatorindex = v.validatorindex
       where epoch >  ${from} and epoch < ${to}
       group by v.validatorindex
       order by rate;`);

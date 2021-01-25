@@ -21,7 +21,7 @@ export default class Effectiveness {
       ]
     };
   }
-  
+
   static async createAvgEmbedMessage(network, summary) {
     return {
       ...msgHeader,
@@ -29,7 +29,7 @@ export default class Effectiveness {
       fields: Object.keys(summary).map(key => ({ name: key, value: `validators: ${summary[key].validators}, avg: ${summary[key].avg}` }))
     };
   }
-  
+
   @Command({
     cmd: 'eff',
     description: 'Effectiveness',
@@ -47,9 +47,9 @@ export default class Effectiveness {
       FROM
           blocks
       WHERE
-          slot > attestation_assignments.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
+          slot > attestation_assignments_p.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
       FROM
-          attestation_assignments
+          attestation_assignments_p
       WHERE validatorindex in (
           select validators.validatorindex from validators
           )  AND inclusionslot > 0 and epoch > ${from} and epoch < ${to};`)
@@ -57,8 +57,8 @@ export default class Effectiveness {
     const outputString = this.createEmbedMessage(network, { avrage, from, to });
     return outputString;
   }
-  
-  
+
+
   @Command({
     cmd: 'eff.avg',
     description: 'Avg effectiveness',
@@ -76,9 +76,9 @@ export default class Effectiveness {
       FROM
           blocks
       WHERE
-          slot > attestation_assignments.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
+          slot > attestation_assignments_p.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
       FROM
-          attestation_assignments
+          attestation_assignments_p
       WHERE validatorindex in (
           select validators.validatorindex from validators
           )  AND inclusionslot > 0 and epoch > ${from} and epoch < ${to}
