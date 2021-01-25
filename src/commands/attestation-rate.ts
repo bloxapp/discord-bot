@@ -43,7 +43,7 @@ export default class AttestationRate {
       : pgMainnet;
     const from = epoch - customNumber;
     const to = epoch;
-    const { rate } = (await db.get().query(`SELECT avg(status)*100 as rate
+    const { rate } = (await db.get().query(`SELECT avg(attestation_assignments_p.status)*100 as rate
       FROM validators v
       left join attestation_assignments_p on attestation_assignments_p.validatorindex = v.validatorindex
       where epoch > ${from} and epoch < ${to};`)
@@ -65,7 +65,7 @@ export default class AttestationRate {
       : pgMainnet;
     const from = epoch - customNumber;
     const to = epoch;
-    const { rows } = await db.get().query(`SELECT v.validatorindex, avg(status)*100 as rate
+    const { rows } = await db.get().query(`SELECT v.validatorindex, avg(attestation_assignments_p.status)*100 as rate
       FROM validators v
       left join attestation_assignments_p on attestation_assignments_p.validatorindex = v.validatorindex
       where epoch >  ${from} and epoch < ${to}
