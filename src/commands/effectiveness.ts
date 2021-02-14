@@ -47,9 +47,9 @@ export default class Effectiveness {
       FROM
           blocks
       WHERE
-          slot > attestation_assignments.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
+          slot > attestation_assignments_p.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
       FROM
-          attestation_assignments
+          attestation_assignments_p
       WHERE validatorindex in (
           select validators.validatorindex from validators
           )  AND inclusionslot > 0 and epoch > ${from} and epoch < ${to};`)
@@ -76,9 +76,9 @@ export default class Effectiveness {
       FROM
           blocks
       WHERE
-          slot > attestation_assignments.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
+          slot > attestation_assignments_p.attesterslot AND blocks.status IN ('1', '3')), 0)), 0) * 100 as avrage
       FROM
-          attestation_assignments
+          attestation_assignments_p
       WHERE validatorindex in (
           select validators.validatorindex from validators
           )  AND inclusionslot > 0 and epoch > ${from} and epoch < ${to}
