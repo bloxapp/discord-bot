@@ -102,13 +102,10 @@ export default class ProcessStatistics {
     const { validators } = data;
     const showStatuses = ['active', 'deposited'];
     const { mainnet, pyrmont } = validators;
-    console.log(1);
     const attrMainnet = await AttestationRate.getRate({ network: 'mainnet', justValue: true });
     const effMainnet = await Effectiveness.getEff({ network: 'mainnet', justValue: true });
-    console.log(2);
     const attrPyrmont = await AttestationRate.getRate({ network: 'pyrmont', justValue: true });
     const effPyrmont = await Effectiveness.getEff({ network: 'pyrmont', justValue: true });
-    console.log(3);
     return {
       ...msgHeader,
       title: ':bell: Daily BloxStaking Updates',

@@ -72,7 +72,9 @@ export default class NewValidators {
   static async getPublicStats({ periodInMin = 1 }) {
     const network = 'mainnet';
     const validators = await this.getStats({ network, type: 'deposit', customNumber: periodInMin, justValue: true });
-    const outputString = await this.createPublicEmbedMessage(validators);
-    return outputString;
+    if (Array.isArray(validators) && validators.length > 0) {
+      const outputString = await this.createPublicEmbedMessage(validators);
+      return outputString;
+    }
   }
 }
