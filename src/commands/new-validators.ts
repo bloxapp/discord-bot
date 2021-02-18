@@ -27,11 +27,11 @@ export default class NewValidators {
   })
   static async getStats({ network = 'mainnet', type = 'active', customNumber = 60, justValue = false }) {
     const validators = await validatorsApi.loadNewValidators(network, type, customNumber);
-    if (validators.length === 0) {
-      return;
-    }
     if (justValue) {
       return validators;
+    }
+    if (validators.length === 0) {
+      return;
     }
     const outputString = this.createEmbedMessage(network, type, validators);
     return outputString;
