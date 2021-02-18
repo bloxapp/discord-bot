@@ -115,6 +115,12 @@ spec:
               name: config-secrets
               key: dev_channel_id
 
+        - name: PUBLIC_STATS_CHANNEL_ID
+          valueFrom:
+            secretKeyRef:
+              name: config-secrets
+              key: public_stats_channel_id
+
         - name: PGUSER
           valueFrom:
             secretKeyRef:
