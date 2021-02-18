@@ -2,6 +2,7 @@ export const registeredSchedulers = [];
 
 export function Schedule(metadata) {
   return (target, key, descriptor) => {
+    console.log('=metadata=', metadata)
     registeredSchedulers.push({
       ...metadata,
       target,

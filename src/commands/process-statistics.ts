@@ -3,7 +3,9 @@ import organizationsApi from '../api/organizations';
 import msgHeader from '../helpers/msg-header';
 import { Command } from './decorators/command-decorator';
 import { Schedule } from './decorators/schedule-decorator';
-
+import AttestationRate from './attestation-rate';
+import Effectiveness from './effectiveness';
+import bot from '../boundaries/bot';
 export default class ProcessStatistics {
   static async loadValidatorsData() {
     const wallets = await validatorsApi.loadWallets();
@@ -94,6 +96,58 @@ export default class ProcessStatistics {
     const validators = await this.loadValidatorsData();
     const users = await this.loadUsersData();
     const outputString = await this.createEmbedMessage({ ...validators, users });
+    return outputString;
+  };
+
+  static async createPublicEmbedMessage(data) {
+    const { validators } = data;
+    const showStatuses = ['active', 'deposited'];
+    const { mainnet } = validators;
+    return {
+      ...msgHeader,
+      title: ':bell: Daily BloxStaking Updates',
+      fields: [
+        {
+          name: ':cut_of_meat: Mainnet Validators :cut_of_meat:',
+          value: ':point_down: '
+        },
+        ...Object.keys(mainnet).filter(key => showStatuses.includes(key))
+          .reduce((aggr, key) => {
+            const name = `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+            aggr.push({
+              name,
+              value: mainnet[key],
+              inline: true
+            });
+            return aggr;
+          }, []),
+        {
+          name: ':bar_chart: Stats [last 300 epoch] :bar_chart:',
+          value: ':point_down: '
+        },
+        {
+          name: 'Attestation',
+          value: await AttestationRate.getRate({ justValue: true }),
+          inline: true
+        },
+        {
+          name: 'Effectiveness',
+          value: await Effectiveness.getEff({ justValue: true }),
+          inline: true
+        },
+      ],
+    };
+  };
+
+  @Schedule({
+    cron: '0 3,15 * * *',
+    channelId: process.env.PUBLIC_STATS_CHANNEL_ID,
+    env: 'prod'
+  })
+  static async getPublicStats() {
+    const validators = await this.loadValidatorsData();
+    const users = await this.loadUsersData();
+    const outputString = await this.createPublicEmbedMessage({ ...validators, users });
     return outputString;
   };
 }

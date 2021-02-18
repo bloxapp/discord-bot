@@ -9,9 +9,9 @@ export default class NewValidators {
       ...msgHeader,
       title: `New ${network} ${type} validators on ${process.env.ENV}`,
       fields: validators.map((validator) => {
-        const { id, network } = validator;
+        const { id, network, publicKey } = validator;
         const currentNetwork = network === 'mainnet' ? '' : `${network}.`;
-        const value = `https://${currentNetwork}beaconcha.in/validator/${validator.publicKey}`;
+        const value = `https://${currentNetwork}beaconcha.in/validator/${publicKey}`;
         return {
           name: `Validator id ${id}`,
           value
@@ -25,24 +25,54 @@ export default class NewValidators {
     description: 'New validators',
     args: ['network', 'validator', 'customNumber']
   })
-  static async getStats({ network = 'mainnet', validator = 'active', customNumber = 60 }) {
-    const validators = await validatorsApi.loadNewValidators(network, validator, customNumber);
+  static async getStats({ network = 'mainnet', type = 'active', customNumber = 60, justValue = false }) {
+    const validators = await validatorsApi.loadNewValidators(network, type, customNumber);
     if (validators.length === 0) {
       return;
     }
-    const outputString = this.createEmbedMessage(network, validator, validators);
+    if (justValue) {
+      return validators;
+    }
+    const outputString = this.createEmbedMessage(network, type, validators);
     return outputString;
   };
 
   @Schedule({
-    cron: '*/1 * * * *'
+    cron: '* * * * *'
   })
   static async getSummaryStats({ periodInMin = 1 }) {
     return [
-      await this.getStats({ network: 'pyrmont', validator: 'active', customNumber: periodInMin }),
-      await this.getStats({ network: 'pyrmont', validator: 'deposit', customNumber: periodInMin }),
-      await this.getStats({ network: 'mainnet', validator: 'active', customNumber: periodInMin }),
-      await this.getStats({ network: 'mainnet', validator: 'deposit', customNumber: periodInMin })
+      await this.getStats({ network: 'pyrmont', type: 'active', customNumber: periodInMin }),
+      await this.getStats({ network: 'pyrmont', type: 'deposit', customNumber: periodInMin }),
+      await this.getStats({ network: 'mainnet', type: 'active', customNumber: periodInMin }),
+      await this.getStats({ network: 'mainnet', type: 'deposit', customNumber: periodInMin })
     ]
+  }
+
+  static async createPublicEmbedMessage(validators) {
+    return {
+      ...msgHeader,
+      title: ':clap: Congrats! :clap:',
+      fields: validators.map((validator) => {
+        const { id, publicKey } = validator;
+        const value = `https://beaconcha.in/validator/${publicKey}`;
+        return {
+          name: `Validator ${id} successfully proposed on the beacon chain.`,
+          value
+        }
+      }),
+    };
+  };
+
+  @Schedule({
+    cron: '* * * * *',
+    channelId: process.env.PUBLIC_STATS_CHANNEL_ID,
+    env: 'prod'
+  })
+  static async getPublicStats({ periodInMin = 1 }) {
+    const network = 'mainnet';
+    const validators = await this.getStats({ network, type: 'deposit', customNumber: periodInMin, justValue: true });
+    const outputString = await this.createPublicEmbedMessage(validators);
+    return outputString;
   }
 }

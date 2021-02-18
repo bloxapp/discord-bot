@@ -35,7 +35,7 @@ export default class AttestationRate {
     description: 'Attestations rate',
     args: ['network', 'customNumber']
   })
-  static async getRate({ network = 'mainnet', customNumber = 300 }) {
+  static async getRate({ network = 'mainnet', customNumber = 300, justValue = false }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'
@@ -48,6 +48,9 @@ export default class AttestationRate {
       left join attestation_assignments_p on attestation_assignments_p.validatorindex = v.validatorindex
       where epoch > ${from} and epoch < ${to};`)
     ).rows[0];
+    if (justValue) {
+      return rate;
+    }
     const outputString = this.createEmbedMessage(network, { rate, from, to });
     return outputString;
   }

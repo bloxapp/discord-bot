@@ -16,26 +16,31 @@ const activeHandlers = [
   Effectiveness.getEff,
   Effectiveness.getAvgEff,
   NewValidators.getStats,
-  ProcessStatistics.getStats
+  NewValidators.getPublicStats,
+  ProcessStatistics.getStats,
+  ProcessStatistics.getPublicStats
 ];
 
 console.log(`Total active handlers - ${activeHandlers.length}`)
 
-const emitMessage = (data) => {
+const emitMessage = (data, customChannelId = null) => {
   if (!data) return;
   const channelId = process.env.ENV === 'stage'
     ? process.env.DEV_CHANNEL_ID
     : process.env.ALL_CHANNEL_ID;
-  bot.channels.get(channelId).send({ embed: data });
+  bot.channels.get(customChannelId || channelId).send({ embed: data });
 }
 
 const onReady = async () => {
   for (const scheduler of registeredSchedulers) {
+    if (scheduler.env && scheduler.env !== process.env.ENV) {
+      continue;
+    }
     cron.schedule(scheduler.cron, async() => {
       const { func, target, args = {} } = scheduler;
       const result = await func.bind(target)(args);
       const messages = Array.isArray(result) ? result : [result];
-      messages.forEach(msg => emitMessage(msg));
+      messages.forEach(msg => emitMessage(msg, scheduler.channelId));
     });
   }
   console.info(`Logged in as ${bot.user.username}!`);
@@ -113,5 +118,6 @@ async function start () {
 }
 
 export default {
-  start
+  start,
+  emitMessage
 };

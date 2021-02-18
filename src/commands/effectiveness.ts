@@ -35,7 +35,7 @@ export default class Effectiveness {
     description: 'Effectiveness',
     args: ['network', 'customNumber']
   })
-  static async getEff({ network = 'mainnet', customNumber = 300 }) {
+  static async getEff({ network = 'mainnet', customNumber = 300, justValue = false  }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'
@@ -54,6 +54,9 @@ export default class Effectiveness {
           select validators.validatorindex from validators
           )  AND inclusionslot > 0 and epoch > ${from} and epoch < ${to};`)
     ).rows[0];
+    if (justValue) {
+      return avrage;
+    }
     const outputString = this.createEmbedMessage(network, { avrage, from, to });
     return outputString;
   }
