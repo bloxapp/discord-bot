@@ -32,10 +32,8 @@ const emitMessage = (data, customChannelId = null) => {
 }
 
 const onReady = async () => {
-  for (const scheduler of registeredSchedulers) {
-    if (scheduler.env && scheduler.env !== process.env.ENV) {
-      continue;
-    }
+  const envSchedulers = registeredSchedulers.filter(scheduler => scheduler.env === process.env.ENV);
+  for (const scheduler of envSchedulers) {
     cron.schedule(scheduler.cron, async() => {
       const { func, target, args = {} } = scheduler;
       const result = await func.bind(target)(args);
