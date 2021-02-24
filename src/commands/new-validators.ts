@@ -49,15 +49,23 @@ export default class NewValidators {
     ]
   }
 
-  static async createPublicEmbedMessage(validators) {
+  static async createPublicEmbedMessage(validators, type) {
     return {
       ...msgHeader,
-      title: ':clap: Congrats! :clap:',
+      title: ':clap: Congratulations! :clap:',
       fields: validators.map((validator) => {
         const { id, publicKey } = validator;
         const value = `https://beaconcha.in/validator/${publicKey}`;
+        let name;
+        if (type === 'propose') {
+          name = `Validator ${id} successfully proposed on the Beacon Chain`;
+        } else if (type === 'deposit') {
+          name = `Validator ${id} for officially joining the Beacon Chain`;
+        } else {
+          throw new Error(`Type ${type} not supported.`);
+        }
         return {
-          name: `Validator ${id} successfully proposed on the beacon chain.`,
+          name,
           value
         }
       }),
@@ -71,10 +79,15 @@ export default class NewValidators {
   })
   static async getPublicStats({ periodInMin = 1 }) {
     const network = 'mainnet';
-    const validators = await this.getStats({ network, type: 'deposit', customNumber: periodInMin, justValue: true });
-    if (Array.isArray(validators) && validators.length > 0) {
-      const outputString = await this.createPublicEmbedMessage(validators);
-      return outputString;
+    const validatorsProposed = await this.getStats({ network, type: 'propose', customNumber: periodInMin, justValue: true });
+    const validatorsDeposited = await this.getStats({ network, type: 'deposit', customNumber: periodInMin, justValue: true });
+    const result = [];
+    if (Array.isArray(validatorsProposed) && validatorsProposed.length > 0) {
+      result.push(validatorsProposed);
     }
+    if (Array.isArray(validatorsDeposited) && validatorsDeposited.length > 0) {
+      result.push(validatorsDeposited);
+    }
+    return result;
   }
 }

@@ -12,7 +12,7 @@ export default class AttestationRate {
       fields: [
         {
           name: `Rate`,
-          value: rate
+          value: `${rate}`
         },
         {
           name: `Query`,
@@ -38,19 +38,37 @@ export default class AttestationRate {
   static async getRate({ network = 'mainnet', customNumber = 300, justValue = false }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
-    const db = network === 'pyrmont'
-      ? pgPyrmont
-      : pgMainnet;
     const from = epoch - customNumber;
     const to = epoch;
-    const { rate } = (await db.get().query(`SELECT avg(attestation_assignments_p.status)*100 as rate
-      FROM validators v
-      left join attestation_assignments_p on attestation_assignments_p.validatorindex = v.validatorindex
-      where epoch > ${from} and epoch < ${to};`)
-    ).rows[0];
+    let rate;
+    if (network === 'pyrmont') {
+      const data = (await this.getAvgRate({ network, customNumber }, true)).reduce((aggr, item) => {
+        const rate = +item.rate;
+        if (rate === 0) {
+          return aggr;
+        }
+        aggr.validators += 1;
+        aggr.rate += +rate;
+        return aggr;
+      }, { validators: 0, rate: 0 });
+      rate = data.rate / data.validators;
+    } else {
+      /*
+      const db = network === 'pyrmont'
+        ? pgPyrmont
+        : pgMainnet;
+      */
+      const db = pgMainnet;
+      rate = (await db.get().query(`SELECT avg(attestation_assignments_p.status)*100 as rate
+        FROM validators v
+        left join attestation_assignments_p on attestation_assignments_p.validatorindex = v.validatorindex
+        where epoch > ${from} and epoch < ${to};`)
+      ).rows[0].rate;
+    }
     if (justValue) {
       return rate;
     }
+    console.log(rate);
     const outputString = this.createEmbedMessage(network, { rate, from, to });
     return outputString;
   }
@@ -60,7 +78,7 @@ export default class AttestationRate {
     description: 'Avg attestations rate',
     args: ['network', 'customNumber']
   })
-  static async getAvgRate ({ network = 'mainnet', customNumber = 300 }) {
+  static async getAvgRate ({ network = 'mainnet', customNumber = 300 }, justValue = false) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'
@@ -74,6 +92,9 @@ export default class AttestationRate {
       where epoch >  ${from} and epoch < ${to}
       group by v.validatorindex
       order by rate;`);
+    if (justValue) {
+      return rows;
+    }
     const summary = rows.reduce((aggr, item) => {
       const rate = +item.rate;
       let groupName;
