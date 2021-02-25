@@ -88,6 +88,8 @@ export default class NewValidators {
     if (Array.isArray(validatorsDeposited) && validatorsDeposited.length > 0) {
       result.push(validatorsDeposited);
     }
-    return result;
+    if (result.length) {
+      return result;
+    }
   }
 }
