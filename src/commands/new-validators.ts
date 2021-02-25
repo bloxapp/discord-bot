@@ -7,13 +7,21 @@ export default class NewValidators {
   static async createEmbedMessage(network, type, validators) {
     return {
       ...msgHeader,
-      title: `New ${network} ${type} validators on ${process.env.ENV}`,
+      title: ':clap: Congratulations! :clap:',
       fields: validators.map((validator) => {
         const { id, network, publicKey } = validator;
         const currentNetwork = network === 'mainnet' ? '' : `${network}.`;
         const value = `https://${currentNetwork}beaconcha.in/validator/${publicKey}`;
+        let name;
+        if (type === 'propose') {
+          name = `Validator ${id} successfully proposed on the Beacon Chain`;
+        } else if (type === 'deposit') {
+          name = `Validator ${id} for officially joining the Beacon Chain`;
+        } else {
+          name = `New ${type} Validator id ${id}`;
+        }
         return {
-          name: `Validator id ${id}`,
+          name: `[${process.env.ENV} : ${network}] ${name}`,
           value
         }
       }),
