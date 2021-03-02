@@ -36,8 +36,7 @@ export default class NewValidators {
     args: ['network', 'validator', 'customNumber']
   })
   static async getStats({ network = 'mainnet', type = 'active', customNumber = 60, justValue = false, showPrefix = true }) {
-    // const validators = await validatorsApi.loadNewValidators(network, type, customNumber);
-    let validators = [{ id: 'test1', network: 'pyrmont', publicKey: 'testkey' }];
+    const validators = await validatorsApi.loadNewValidators(network, type, customNumber);
     if (justValue) {
       return validators;
     }
