@@ -68,7 +68,6 @@ export default class AttestationRate {
     if (justValue) {
       return rate;
     }
-    console.log(rate);
     const outputString = this.createEmbedMessage(network, { rate, from, to });
     return outputString;
   }

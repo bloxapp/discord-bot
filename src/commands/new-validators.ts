@@ -4,7 +4,7 @@ import { Command } from './decorators/command-decorator';
 import { Schedule } from './decorators/schedule-decorator';
 
 export default class NewValidators {
-  static async createEmbedMessage(network, type, validators) {
+  static async createEmbedMessage(type, validators, showPrefix = true) {
     return {
       ...msgHeader,
       title: ':clap: Congratulations! :clap:',
@@ -21,7 +21,9 @@ export default class NewValidators {
           name = `New ${type} Validator id ${id}`;
         }
         return {
-          name: `[${process.env.ENV} : ${network}] ${name}`,
+          name: showPrefix ?
+            `[${process.env.ENV}: ${network}] ${name}`
+            : name,
           value
         }
       }),
@@ -33,15 +35,16 @@ export default class NewValidators {
     description: 'New validators',
     args: ['network', 'validator', 'customNumber']
   })
-  static async getStats({ network = 'mainnet', type = 'active', customNumber = 60, justValue = false }) {
-    const validators = await validatorsApi.loadNewValidators(network, type, customNumber);
+  static async getStats({ network = 'mainnet', type = 'active', customNumber = 60, justValue = false, showPrefix = true }) {
+    // const validators = await validatorsApi.loadNewValidators(network, type, customNumber);
+    let validators = [{ id: 'test1', network: 'pyrmont', publicKey: 'testkey' }];
     if (justValue) {
       return validators;
     }
     if (validators.length === 0) {
       return;
     }
-    const outputString = this.createEmbedMessage(network, type, validators);
+    const outputString = this.createEmbedMessage(type, validators, showPrefix);
     return outputString;
   };
 
@@ -49,12 +52,15 @@ export default class NewValidators {
     cron: '* * * * *'
   })
   static async getSummaryStats({ periodInMin = 1 }) {
-    return [
+    const result = [
       await this.getStats({ network: 'pyrmont', type: 'active', customNumber: periodInMin }),
       await this.getStats({ network: 'pyrmont', type: 'deposit', customNumber: periodInMin }),
       await this.getStats({ network: 'mainnet', type: 'active', customNumber: periodInMin }),
       await this.getStats({ network: 'mainnet', type: 'deposit', customNumber: periodInMin })
-    ]
+    ].filter(item => item);
+    if (result.length) {
+      return result;
+    }
   }
 
   static async createPublicEmbedMessage(validators, type) {
@@ -87,15 +93,10 @@ export default class NewValidators {
   })
   static async getPublicStats({ periodInMin = 1 }) {
     const network = 'mainnet';
-    const validatorsProposed = await this.getStats({ network, type: 'propose', customNumber: periodInMin, justValue: true });
-    const validatorsDeposited = await this.getStats({ network, type: 'deposit', customNumber: periodInMin, justValue: true });
-    const result = [];
-    if (Array.isArray(validatorsProposed) && validatorsProposed.length > 0) {
-      result.push(validatorsProposed);
-    }
-    if (Array.isArray(validatorsDeposited) && validatorsDeposited.length > 0) {
-      result.push(validatorsDeposited);
-    }
+    const result = [
+      await this.getStats({ network, type: 'propose', customNumber: periodInMin, showPrefix: false }),
+      await this.getStats({ network, type: 'deposit', customNumber: periodInMin, showPrefix: false })
+    ].filter(item => item);
     if (result.length) {
       return result;
     }
