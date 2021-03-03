@@ -52,10 +52,10 @@ export default class NewValidators {
   })
   static async getSummaryStats({ periodInMin = 1 }) {
     const result = [
-      await this.getStats({ network: 'pyrmont', type: 'active', customNumber: periodInMin }),
-      await this.getStats({ network: 'pyrmont', type: 'deposit', customNumber: periodInMin }),
-      await this.getStats({ network: 'mainnet', type: 'active', customNumber: periodInMin }),
-      await this.getStats({ network: 'mainnet', type: 'deposit', customNumber: periodInMin })
+      // await this.getStats({ network: 'pyrmont', type: 'active', customNumber: periodInMin }),
+      // await this.getStats({ network: 'pyrmont', type: 'deposit', customNumber: periodInMin }),
+      // await this.getStats({ network: 'mainnet', type: 'active', customNumber: periodInMin }),
+      // await this.getStats({ network: 'mainnet', type: 'deposit', customNumber: periodInMin })
     ].filter(item => item);
     if (result.length) {
       return result;
