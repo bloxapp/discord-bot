@@ -62,29 +62,6 @@ export default class NewValidators {
     }
   }
 
-  static async createPublicEmbedMessage(validators, type) {
-    return {
-      ...msgHeader,
-      title: ':clap: Congratulations! :clap:',
-      fields: validators.map((validator) => {
-        const { id, publicKey } = validator;
-        const value = `https://beaconcha.in/validator/${publicKey}`;
-        let name;
-        if (type === 'propose') {
-          name = `Validator ${id} successfully proposed on the Beacon Chain`;
-        } else if (type === 'deposit') {
-          name = `Validator ${id} for officially joining the Beacon Chain`;
-        } else {
-          throw new Error(`Type ${type} not supported.`);
-        }
-        return {
-          name,
-          value
-        }
-      }),
-    };
-  };
-
   @Schedule({
     cron: '* * * * *',
     channelId: process.env.PUBLIC_STATS_CHANNEL_ID,
