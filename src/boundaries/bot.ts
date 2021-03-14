@@ -31,7 +31,10 @@ const emitMessage = (data, customChannelId = null) => {
   bot.channels.get(customChannelId || channelId).send({ embed: data });
 }
 
+let isSetup = false;
 const onReady = async () => {
+  if (isSetup) return;
+
   const envSchedulers = registeredSchedulers.filter(scheduler => !scheduler.env || scheduler.env === process.env.ENV);
   for (const scheduler of envSchedulers) {
     cron.schedule(scheduler.cron, async() => {
@@ -41,6 +44,7 @@ const onReady = async () => {
       messages.forEach(msg => emitMessage(msg, scheduler.channelId));
     });
   }
+  isSetup = true;
   console.info(`Logged in as ${bot.user.username}!`);
 };
 
