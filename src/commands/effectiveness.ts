@@ -94,7 +94,7 @@ export default class Effectiveness {
       } else if (avrage > 0 && avrage <= 90) {
         groupName = '>0% x <=90%';
       } else if (avrage > 90 && avrage < 100) {
-        groupName = '>90%';
+        groupName = '>90% x < 100%';
       } else if (avrage === 100) {
         groupName = '100%';
       }

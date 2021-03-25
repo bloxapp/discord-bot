@@ -101,8 +101,10 @@ export default class AttestationRate {
         groupName = '0%';
       } else if (rate > 0 && rate <= 90) {
         groupName = '>0% x <=90%';
-      } else if (rate > 90) {
-        groupName = '>90%';
+      } else if (rate > 90 && rate < 100) {
+        groupName = '>90% x < 100%';
+      } else if (rate === 100) {
+        groupName = '100%';
       }
       aggr[groupName] = aggr[groupName] || { validators: 0, avg: 0 };
       aggr[groupName].validators += 1;
