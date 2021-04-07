@@ -40,6 +40,9 @@ export default class ProcessStatistics {
           value: '-------------------------'
         },
         ...Object.keys(wallets).reduce((aggr, key) => {
+          if (process.env.ENV === 'env' && key === 'active') {
+            return aggr;
+          }
           const name = key === 'deprecated_version'
             ? 'Deprecated'
             : `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
@@ -55,6 +58,9 @@ export default class ProcessStatistics {
           value: '-------------------------'
         },
         ...Object.keys(pyrmont).reduce((aggr, key) => {
+          if (process.env.ENV === 'env' && key === 'active') {
+            return aggr;
+          }
           const name = key === 'unknown_status'
             ? 'Unknown'
             : `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
@@ -70,6 +76,9 @@ export default class ProcessStatistics {
           value: '-------------------------'
         },
         ...Object.keys(mainnet).reduce((aggr, key) => {
+          if (process.env.ENV === 'env' && key === 'active') {
+            return aggr;
+          }
           const name = key === 'unknown_status'
             ? 'Unknown'
             : `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
