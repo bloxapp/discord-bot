@@ -15,6 +15,7 @@ const validatorsApi = () => {
 
   const loadNewValidators = async (network, type, periodInMin) => {
     const url = `${process.env.VC_URL}/accounts/?event={"type":"${type}","interval":{"minutes":${periodInMin}}}&network=${network}`;
+    console.log('-> new validator req:', url);
     const validators = await axios(url);
     return validators.data.slice(0, 10);
   };
