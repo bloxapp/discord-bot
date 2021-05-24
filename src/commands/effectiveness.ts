@@ -35,7 +35,7 @@ export default class Effectiveness {
     description: 'Effectiveness',
     args: ['network', 'customNumber']
   })
-  static async getEff({ network = 'mainnet', customNumber = 300, justValue = false  }) {
+  static async getEff({ network = 'mainnet', customNumber = 225, justValue = false  }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'
@@ -67,7 +67,7 @@ export default class Effectiveness {
     description: 'Avg effectiveness',
     args: ['network', 'customNumber']
   })
-  static async getAvgEff({ network = 'mainnet', customNumber = 300 }) {
+  static async getAvgEff({ network = 'mainnet', customNumber = 225 }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'

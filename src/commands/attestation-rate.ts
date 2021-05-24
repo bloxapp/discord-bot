@@ -35,7 +35,7 @@ export default class AttestationRate {
     description: 'Attestations rate',
     args: ['network', 'customNumber']
   })
-  static async getRate({ network = 'mainnet', customNumber = 300, justValue = false }) {
+  static async getRate({ network = 'mainnet', customNumber = 225, justValue = false }) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const from = epoch - customNumber;
@@ -77,7 +77,7 @@ export default class AttestationRate {
     description: 'Avg attestations rate',
     args: ['network', 'customNumber']
   })
-  static async getAvgRate ({ network = 'mainnet', customNumber = 300 }, justValue = false) {
+  static async getAvgRate ({ network = 'mainnet', customNumber = 225 }, justValue = false) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
     const db = network === 'pyrmont'
