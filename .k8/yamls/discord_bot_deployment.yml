@@ -49,7 +49,7 @@ spec:
   selector:
     app: discord-bot
 ---
-apiVersion: REPLACE_API_VERSION 
+apiVersion: REPLACE_API_VERSION
 kind: Deployment
 metadata:
   labels:
@@ -70,7 +70,7 @@ spec:
     spec:
       containers:
       - name: discord-bot
-        image: REPLACE_DOCKER_REPO:REPLACE_IMAGETAG 
+        image: REPLACE_DOCKER_REPO:REPLACE_IMAGETAG
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
@@ -78,7 +78,7 @@ spec:
         env:
         - name: PORT
           value: "5000"
-  
+
         - name: ENV
           valueFrom:
             secretKeyRef:
@@ -139,11 +139,11 @@ spec:
               name: config-secrets
               key: pgpassword
 
-        - name: PGDATABASE_PYRMONT
+        - name: PGDATABASE_PRATER
           valueFrom:
             secretKeyRef:
               name: config-secrets
-              key: pgdatabase_pyrmont
+              key: pgdatabase_prater
 
         - name: PGDATABASE_MAINNET
           valueFrom:
@@ -151,11 +151,11 @@ spec:
               name: config-secrets
               key: pgdatabase_mainnet
 
-        - name: BLOXCHA_PYRMONT_URL
+        - name: BLOXCHA_PRATER_URL
           valueFrom:
             secretKeyRef:
               name: config-secrets
-              key: bloxcha_pyrmont_url
+              key: bloxcha_prater_url
 
         - name: BLOXCHA_MAINNET_URL
           valueFrom:

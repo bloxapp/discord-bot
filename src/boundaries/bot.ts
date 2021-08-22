@@ -66,7 +66,7 @@ const onMessage = async (message) => {
   console.warn(`cmd: ${cmd} params ${params}`);
 
   const defaultValidatorTypes = ['deposit', 'active'];
-  const defaultNetworks = ['pyrmont', 'mainnet'];
+  const defaultNetworks = ['prater', 'mainnet'];
   const defaultEnvs = ['stage', 'prod'];
   const query = {
     'validator': params.filter(value => defaultValidatorTypes.includes(value))[0],

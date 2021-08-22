@@ -21,11 +21,11 @@ export default class ProcessStatistics {
     const { wallets, validators, users } = data;
     let validatorsCount = 0;
     const validatorsKeys = ['active', 'deposited'];
-    const { pyrmont, mainnet } = validators;
+    const { prater, mainnet } = validators;
     for (const [key, value] of Object.entries(validators)) {
       if(validatorsKeys.includes(key)) {
         validatorsCount += Number(value);
-      }    
+      }
     }
     return {
       ...msgHeader,
@@ -54,10 +54,10 @@ export default class ProcessStatistics {
           return aggr;
         }, [{ name: 'Total', value: Object.values(wallets).reduce((a, b) => Number(a) + Number(b), 0), inline: true }]),
         {
-          name: 'Pyrmont Validators',
+          name: 'Prater Validators',
           value: '-------------------------'
         },
-        ...Object.keys(pyrmont).reduce((aggr, key) => {
+        ...Object.keys(prater).reduce((aggr, key) => {
           if (process.env.ENV === 'env' && key === 'active') {
             return aggr;
           }
@@ -66,7 +66,7 @@ export default class ProcessStatistics {
             : `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
           aggr.push({
             name,
-            value: pyrmont[key],
+            value: prater[key],
             inline: true
           });
           return aggr;
@@ -110,11 +110,11 @@ export default class ProcessStatistics {
   static async createPublicEmbedMessage(data) {
     const { validators } = data;
     const showStatuses = ['active', 'deposited'];
-    const { mainnet, pyrmont } = validators;
+    const { mainnet, prater } = validators;
     const attrMainnet = await AttestationRate.getRate({ network: 'mainnet', justValue: true });
     const effMainnet = await Effectiveness.getEff({ network: 'mainnet', justValue: true });
-    const attrPyrmont = await AttestationRate.getRate({ network: 'pyrmont', justValue: true });
-    const effPyrmont = await Effectiveness.getEff({ network: 'pyrmont', justValue: true });
+    const attrPrater = await AttestationRate.getRate({ network: 'prater', justValue: true });
+    const effPrater = await Effectiveness.getEff({ network: 'prater', justValue: true });
     return {
       ...msgHeader,
       title: ':bell: Daily BloxStaking Updates',
@@ -149,15 +149,15 @@ export default class ProcessStatistics {
         },
 
         {
-          name: ':cut_of_meat: Pyrmont Validators :cut_of_meat:',
+          name: ':cut_of_meat: Prater Validators :cut_of_meat:',
           value: '-------------------------------'
         },
-        ...Object.keys(pyrmont).filter(key => showStatuses.includes(key))
+        ...Object.keys(prater).filter(key => showStatuses.includes(key))
           .reduce((aggr, key) => {
             const name = `${key.charAt(0).toUpperCase()}${key.slice(1)}`;
             aggr.push({
               name,
-              value: pyrmont[key],
+              value: prater[key],
               inline: true
             });
             return aggr;
@@ -168,12 +168,12 @@ export default class ProcessStatistics {
         },
         {
           name: 'Attestation',
-          value: `${Number(attrPyrmont).toFixed(3)}%`,
+          value: `${Number(attrPrater).toFixed(3)}%`,
           inline: true
         },
         {
           name: 'Effectiveness',
-          value: `${Number(effPyrmont).toFixed(3)}%`,
+          value: `${Number(effPrater).toFixed(3)}%`,
           inline: true
         },
 
