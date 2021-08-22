@@ -29,7 +29,7 @@ export default class NewValidators {
       }),
     };
   };
-  
+
   @Command({
     cmd: 'n.v',
     description: 'New validators',
@@ -52,8 +52,8 @@ export default class NewValidators {
   })
   static async getSummaryStats({ periodInMin = 1 }) {
     const result = [
-      await this.getStats({ network: 'pyrmont', type: 'active', customNumber: periodInMin }),
-      await this.getStats({ network: 'pyrmont', type: 'deposit', customNumber: periodInMin }),
+      await this.getStats({ network: 'prater', type: 'active', customNumber: periodInMin }),
+      await this.getStats({ network: 'prater', type: 'deposit', customNumber: periodInMin }),
       await this.getStats({ network: 'mainnet', type: 'active', customNumber: periodInMin }),
       await this.getStats({ network: 'mainnet', type: 'deposit', customNumber: periodInMin })
     ].filter(item => item);
