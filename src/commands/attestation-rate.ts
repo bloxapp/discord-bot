@@ -1,7 +1,7 @@
 import bloxchaApi from '../api/bloxcha';
-import pgPyrmont from '../boundaries/db-pyrmont';
-import pgMainnet from '../boundaries/db-mainnet';
 import msgHeader from '../helpers/msg-header';
+import pgPrater from '../boundaries/db-prater';
+import pgMainnet from '../boundaries/db-mainnet';
 import { Command } from './decorators/command-decorator';
 
 export default class AttestationRate {
@@ -41,7 +41,7 @@ export default class AttestationRate {
     const from = epoch - customNumber;
     const to = epoch;
     let rate;
-    if (network === 'pyrmont') {
+    if (network === 'prater') {
       const data = (await this.getAvgRate({ network, customNumber }, true)).reduce((aggr, item) => {
         const rate = +item.rate;
         if (rate === 0) {
@@ -54,8 +54,8 @@ export default class AttestationRate {
       rate = data.rate / data.validators;
     } else {
       /*
-      const db = network === 'pyrmont'
-        ? pgPyrmont
+      const db = network === 'prater'
+        ? pgPrater
         : pgMainnet;
       */
       const db = pgMainnet;
@@ -80,8 +80,8 @@ export default class AttestationRate {
   static async getAvgRate ({ network = 'mainnet', customNumber = 300 }, justValue = false) {
     const stats = await bloxchaApi.loadStats(network);
     const { data: { epoch } } = stats;
-    const db = network === 'pyrmont'
-      ? pgPyrmont
+    const db = network === 'prater'
+      ? pgPrater
       : pgMainnet;
     const from = epoch - customNumber;
     const to = epoch;

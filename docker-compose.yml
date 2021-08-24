@@ -22,14 +22,14 @@ services:
       - TOKEN
       - VC_URL
       - ORG_URL
-      - BLOXCHA_PYRMONT_URL
+      - BLOXCHA_PRATER_URL
       - BLOXCHA_MAINNET_URL
       - ALL_CHANNEL_ID
       - DEV_CHANNEL_ID
       - PGUSER
       - PGHOST
       - PGPASSWORD
-      - PGDATABASE_PYRMONT
+      - PGDATABASE_PRATER
       - PGDATABASE_MAINNET
 
     restart: on-failure
