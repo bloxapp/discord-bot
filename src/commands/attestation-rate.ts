@@ -41,7 +41,6 @@ export default class AttestationRate {
     const from = epoch - customNumber;
     const to = epoch;
     let rate;
-    console.log(`test - ${network} - from - ${from} to ${to} custom - ${customNumber}`);
     if (network === 'prater') {
       const data = (await this.getAvgRate({ network, customNumber }, true)).reduce((aggr, item) => {
         const rate = +item.rate;
