@@ -1,7 +1,6 @@
-import e2m from 'api/e2m';
-import { formatRate, RateGroup } from 'helpers/format';
-import { createAverageRatesMessage, createStandardMessage } from 'helpers/message';
-import msgHeader from '../helpers/msg-header';
+import e2m from '../api/e2m';
+import { formatRate } from '../helpers/format';
+import { createAverageRatesMessage, createStandardMessage } from '../helpers/message';
 import { Command } from './decorators/command-decorator';
 
 export default class AttestationRate {

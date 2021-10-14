@@ -6,7 +6,14 @@ interface Response<T> {
     Data: T;
 }
 
+interface DutyStat {
+    Assigned: number;
+    Executed: number;
+}
+
 interface Stats {
+    Proposals: DutyStat;
+    Attestations: DutyStat;
     AttestationRate: number;
     Effectiveness: number;
 }
