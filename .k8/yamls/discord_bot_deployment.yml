@@ -121,45 +121,15 @@ spec:
               name: config-secrets
               key: public_stats_channel_id
 
-        - name: PGUSER
+        - name: E2M_PRATER_URL
           valueFrom:
             secretKeyRef:
               name: config-secrets
-              key: pguser
+              key: e2m_prater_url
 
-        - name: PGHOST
+        - name: E2M_MAINNET_URL
           valueFrom:
             secretKeyRef:
               name: config-secrets
-              key: pghost
-
-        - name: PGPASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: config-secrets
-              key: pgpassword
-
-        - name: PGDATABASE_PRATER
-          valueFrom:
-            secretKeyRef:
-              name: config-secrets
-              key: pgdatabase_prater
-
-        - name: PGDATABASE_MAINNET
-          valueFrom:
-            secretKeyRef:
-              name: config-secrets
-              key: pgdatabase_mainnet
-
-        - name: BLOXCHA_PRATER_URL
-          valueFrom:
-            secretKeyRef:
-              name: config-secrets
-              key: bloxcha_prater_url
-
-        - name: BLOXCHA_MAINNET_URL
-          valueFrom:
-            secretKeyRef:
-              name: config-secrets
-              key: bloxcha_mainnet_url
+              key: e2m_mainnet_url
 
