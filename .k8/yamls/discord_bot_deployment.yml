@@ -122,7 +122,7 @@ spec:
               key: public_stats_channel_id
 
         - name: E2M_PRATER_URL
-          value: "ethereum2-monitor-api-prater-svc.validators:6090"
+          value: "http://ethereum2-monitor-api-prater-svc.validators:6090"
 
         - name: E2M_MAINNET_URL
-          value: "ethereum2-monitor-api-mainnet-svc.validators:6090"
+          value: "http://ethereum2-monitor-api-mainnet-svc.validators:6090"
