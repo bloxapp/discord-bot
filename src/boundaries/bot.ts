@@ -28,7 +28,7 @@ const emitMessage = (data, customChannelId = null) => {
   const channelId = process.env.ENV === 'stage'
     ? process.env.DEV_CHANNEL_ID
     : process.env.ALL_CHANNEL_ID;
-  bot.channels.get(customChannelId || channelId).send({ embed: data });
+  bot.channels.cache.get(customChannelId || channelId).send({ embed: data });
 }
 
 let isSetup = false;
@@ -37,7 +37,7 @@ const onReady = async () => {
 
   const envSchedulers = registeredSchedulers.filter(scheduler => !scheduler.env || scheduler.env === process.env.ENV);
   for (const scheduler of envSchedulers) {
-    cron.schedule(scheduler.cron, async() => {
+    cron.schedule(scheduler.cron, async () => {
       const { func, target, args = {} } = scheduler;
       const result = await func.bind(target)(args);
       const messages = Array.isArray(result) ? result : [result];
@@ -48,7 +48,7 @@ const onReady = async () => {
   console.info(`Logged in as ${bot.user.username}!`);
 };
 
-const onMessage = async (message) => {
+const onMessage = async (message: Discord.Message) => {
   const isWrongChannel = ![process.env.ALL_CHANNEL_ID, process.env.DEV_CHANNEL_ID].includes(message.channel.id);
   const isStageAndNotDevChannel = process.env.ENV === 'stage' && message.channel.id !== process.env.DEV_CHANNEL_ID;
   if (isWrongChannel || isStageAndNotDevChannel) {
@@ -86,7 +86,7 @@ const onMessage = async (message) => {
 
   try {
     let embed;
-    await message.channel.startTyping();
+    message.channel.startTyping();
     if (cmd === 'help') {
       embed = {
         title: `Commands`,
@@ -108,14 +108,15 @@ const onMessage = async (message) => {
   } catch (e) {
     console.error(`${cmd} failed:`, e);
   }
-  await message.channel.stopTyping();
+  message.channel.stopTyping();
 };
 
-async function start () {
+async function start() {
   bot = new Discord.Client();
   bot.login(process.env.TOKEN);
   bot.on('ready', onReady);
   bot.on('message', onMessage);
+  bot.on('error', error => console.error('error from Discord.Client', error));
   console.info('Discord bot is connected correctly!');
 }
 
