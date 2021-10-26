@@ -5,7 +5,7 @@ import { Command } from './decorators/command-decorator';
 import { Schedule } from './decorators/schedule-decorator';
 import AttestationRate from './attestation-rate';
 import Effectiveness from './effectiveness';
-import { formatRate } from 'helpers/format';
+import { formatRate } from '../helpers/format';
 export default class ProcessStatistics {
   static async loadValidatorsData() {
     const wallets = await validatorsApi.loadWallets();
