@@ -11,6 +11,10 @@ export default class AttestationRate {
   })
   static async getRate({ network = 'mainnet', customNumber = 300, justValue = false }) {
     const resp = await e2m.getCumulativeStats(network, customNumber);
+    const rate = resp.Data.AttestationRate;
+    if (justValue) {
+      return rate;
+    }
     return createStandardMessage(
       {
         network,
@@ -18,7 +22,7 @@ export default class AttestationRate {
         fromEpoch: resp.FromEpoch,
         toEpoch: resp.ToEpoch
       },
-      { name: 'Rate', value: formatRate(resp.Data.AttestationRate) }
+      { name: 'Rate', value: formatRate(rate) }
     );
   }
 

@@ -11,6 +11,10 @@ export default class Effectiveness {
   })
   static async getEff({ network = 'mainnet', customNumber = 300, justValue = false }) {
     const resp = await e2m.getCumulativeStats(network, customNumber);
+    const effectiveness = resp.Data.Effectiveness;
+    if (justValue) {
+      return effectiveness;
+    }
     return createStandardMessage(
       {
         network,
@@ -18,7 +22,7 @@ export default class Effectiveness {
         fromEpoch: resp.FromEpoch,
         toEpoch: resp.ToEpoch
       },
-      { name: 'Rate', value: formatRate(resp.Data.Effectiveness) }
+      { name: 'Rate', value: formatRate(effectiveness) }
     );
   }
 
