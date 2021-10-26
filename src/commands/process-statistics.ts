@@ -5,6 +5,7 @@ import { Command } from './decorators/command-decorator';
 import { Schedule } from './decorators/schedule-decorator';
 import AttestationRate from './attestation-rate';
 import Effectiveness from './effectiveness';
+import { formatRate } from '../helpers/format';
 export default class ProcessStatistics {
   static async loadValidatorsData() {
     const wallets = await validatorsApi.loadWallets();
@@ -23,7 +24,7 @@ export default class ProcessStatistics {
     const validatorsKeys = ['active', 'deposited'];
     const { prater, mainnet } = validators;
     for (const [key, value] of Object.entries(validators)) {
-      if(validatorsKeys.includes(key)) {
+      if (validatorsKeys.includes(key)) {
         validatorsCount += Number(value);
       }
     }
@@ -139,12 +140,12 @@ export default class ProcessStatistics {
         },
         {
           name: 'Attestation',
-          value: `${Number(attrMainnet).toFixed(3)}%`,
+          value: formatRate(attrMainnet as number),
           inline: true
         },
         {
           name: 'Effectiveness',
-          value: `${Number(effMainnet).toFixed(3)}%`,
+          value: formatRate(effMainnet as number),
           inline: true
         },
 
@@ -168,12 +169,12 @@ export default class ProcessStatistics {
         },
         {
           name: 'Attestation',
-          value: `${Number(attrPrater).toFixed(3)}%`,
+          value: formatRate(attrPrater as number),
           inline: true
         },
         {
           name: 'Effectiveness',
-          value: `${Number(effPrater).toFixed(3)}%`,
+          value: formatRate(effPrater as number),
           inline: true
         },
 
