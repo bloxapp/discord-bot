@@ -68,6 +68,15 @@ spec:
       labels:
         app: discord-bot
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/role
+                operator: In
+                values:
+                - staking-main      
       containers:
       - name: discord-bot
         image: REPLACE_DOCKER_REPO:REPLACE_IMAGETAG
@@ -126,3 +135,7 @@ spec:
 
         - name: E2M_MAINNET_URL
           value: "http://ethereum2-monitor-api-mainnet-svc.validators:6090"
+      tolerations:
+      - effect: NoSchedule
+        key: kubernetes.io/role
+        operator: Exists            
