@@ -76,7 +76,7 @@ spec:
               - key: kubernetes.io/role
                 operator: In
                 values:
-                - staking-main      
+                - staking-main
       containers:
       - name: discord-bot
         image: REPLACE_DOCKER_REPO:REPLACE_IMAGETAG
