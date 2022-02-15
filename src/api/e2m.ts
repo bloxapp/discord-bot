@@ -47,12 +47,12 @@ class E2M {
     }
 
     public async getCumulativeStats(network: string, latest: number): Promise<Response<Stats>> {
-        const resp = await this.request(network, '/api/stats/', { latest });
+        const resp = await this.request(network, '/api/stats/', { latest, minus: 1 });
         return resp.data;
     };
 
     public async getValidatorStats(network: string, latest: number): Promise<Response<ValidatorStats>> {
-        const resp = await this.request(network, '/api/stats/validators', { latest });
+        const resp = await this.request(network, '/api/stats/validators', { latest, minus: 1 });
         return resp.data;
     };
 }
