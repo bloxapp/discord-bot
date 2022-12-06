@@ -68,8 +68,6 @@ Helm deploy on stage:
       --wait
       discord-bot
       .k8/helm3/discord-bot
-      --dry-run
-      --debug
   only:
     - stage 
 
