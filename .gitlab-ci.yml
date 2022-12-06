@@ -119,7 +119,5 @@ Helm deploy on production:
       --wait
       discord-bot
       .k8/helm3/discord-bot
-      --dry-run
-      --debug
   only:
     - main      
