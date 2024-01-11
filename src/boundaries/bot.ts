@@ -17,7 +17,8 @@ const activeHandlers = [
   Effectiveness.getAvgEff,
   NewValidators.getStats,
   NewValidators.getPublicStats,
-  ProcessStatistics.getStats,
+  // daily stats are disabled because they aren't accurate at the moment.
+  // ProcessStatistics.getStats,
   ProcessStatistics.getPublicStats
 ];
 
